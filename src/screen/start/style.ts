@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
   },
   backImageView: {
     flex: 1,
+    backgroundColor: 'red'
   },
   title: {
     fontSize: 36,

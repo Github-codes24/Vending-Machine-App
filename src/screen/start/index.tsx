@@ -5,13 +5,13 @@ import styles from './style'
 
 const Start: React.FC<any> = ({ navigation }) => {
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            navigation.navigate('ChooseLanguage');
-        }, 3000);
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         navigation.navigate('ChooseLanguage');
+    //     }, 3000);
 
-        return () => clearTimeout(timer);
-    }, []);
+    //     return () => clearTimeout(timer);
+    // }, []);
 
     return (
         <ImageBackground

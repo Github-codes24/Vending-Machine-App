@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { BLACK, DARK_GREEN, Images, PERSIAN_GREEN, WHITE } from '../../constants';
+import { DARK_GREEN, Images, PERSIAN_GREEN, WHITE } from '../../constants';
 
 interface Props {
   id: string;

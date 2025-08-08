@@ -7,7 +7,8 @@ import CustomButton from '../../component/button'
 
 const ChooseLanguage: React.FC<any> = ({ navigation }) => {
 
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>('English');
+  const [popupVisible, setPopupVisible] = useState(false);
 
   const handleContinue = () => {
     if (selected) {
@@ -45,7 +46,7 @@ const ChooseLanguage: React.FC<any> = ({ navigation }) => {
           <CustomButton
             label={Strings.cancel}
             color={RED}
-            onPress={() => setSelected(null)}
+            onPress={() => setSelected('English')}
           />
           <CustomButton
             label={Strings.continue}

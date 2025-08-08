@@ -12,11 +12,6 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
 
     const handleContinue = () => {
         navigation.navigate('ChooseRelationship');
-        // if (selectedIndex) {
-        //     navigation.navigate('ChooseRelationship');
-        // } else {
-        //     Alert.alert('Please select a language');
-        // }
     };
 
     return (

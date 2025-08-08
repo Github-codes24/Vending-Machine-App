@@ -7,11 +7,11 @@ import CustomButton from '../../component/button'
 
 const ChooseRelationship: React.FC<any> = ({ navigation }) => {
 
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>('Self');
 
   const handleContinue = () => {
     if (selected) {
-      navigation.navigate('WelcomeScreen');
+      navigation.navigate('BillAccount');
     } else {
       Alert.alert('Please select a language');
     }

@@ -1,18 +1,20 @@
 import { StyleSheet } from 'react-native';
-import { DARK_GREEN, PERSIAN_GREEN, PRIMARY_COLOR } from '../../constants';
+import { DARK_GREEN, PRIMARY_COLOR } from '../../constants';
 
 const styles = StyleSheet.create({
   container: {
+    ...StyleSheet.absoluteFillObject,
     flex: 1,
+    backgroundColor: '#EAF6F4',
+    paddingHorizontal: 20,
   },
   backImageView: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#EAF6F4',
-    justifyContent: 'center'
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
   },
   subContainer: {
-    flex: 0.9,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

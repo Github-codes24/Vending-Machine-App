@@ -6,25 +6,29 @@ import CustomButton from '../../component/button'
 
 const BillAccount: React.FC<any> = ({ navigation }) => {
 
-    const [currentBalance, setCurrentBalance] = useState<string | null>(null);
-    const [billingAmount, setBillingAmount] = useState<string | null>(null);
+    const [currentBalance, setCurrentBalance] = useState<string | null>('5000');
+    const [billingAmount, setBillingAmount] = useState<string | null>('5000');
 
     const handleContinue = () => {
-        navigation.navigate('WelcomeScreen');
+        navigation.navigate('Bill');
     };
 
     return (
-        <View style={styles.container}>
-            <ImageBackground
-                style={styles.backImageView}
-                source={Images.ic_backgroundImage}>
-                <View style={styles.subContainer}>
-                    <Text style={styles.title}>{Strings.currentBalance}</Text>
-                    <Text style={styles.subTitle}>{currentBalance}</Text>
-                </View>
-                <View style={styles.subContainer}>
-                    <Text style={styles.title}>{Strings.billingAmount}</Text>
-                    <Text style={styles.subTitle}>{billingAmount}</Text>
+        <ImageBackground
+            style={styles.backImageView}
+            source={Images.ic_backgroundImage}
+            resizeMode="cover"
+        >
+            <View style={styles.container}>
+                <View style={{ flex: 0.9, justifyContent: 'center' }}>
+                    <View style={styles.subContainer}>
+                        <Text style={styles.title}>{Strings.currentBalance}</Text>
+                        <Text style={styles.subTitle}>Rs {currentBalance}</Text>
+                    </View>
+                    <View style={styles.subContainer}>
+                        <Text style={styles.title}>{Strings.billingAmount}</Text>
+                        <Text style={styles.subTitle}>Rs {billingAmount}</Text>
+                    </View>
                 </View>
                 <View style={styles.buttonContainer}>
                     <CustomButton
@@ -40,8 +44,8 @@ const BillAccount: React.FC<any> = ({ navigation }) => {
                         onPress={handleContinue}
                     />
                 </View>
-            </ImageBackground>
-        </View>
+            </View>
+        </ImageBackground>
     )
 }
 export default BillAccount

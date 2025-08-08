@@ -11,7 +11,9 @@ export const Strings = {
   hindi: 'Hindi',
   marathi: 'Marathi',
   cancel: 'Cancel',
-  continue: 'Continue',
+  continue: 'Continue',  
+  areYouSureWantToCancelTheProcess: 'Are you sure want to cancel the process?',  
+  yourAccountBalance: 'Your Account Balance is',
   welcomeGourab: 'Welcome Gourab,',
   howCanWeHelpYouToday: 'How Can We Help You Today!',
   checkBalance: 'Check Balance',
@@ -26,6 +28,7 @@ export const Strings = {
   other: 'Other',
   currentBalance: 'Current Balance:',
   billingAmount: 'Billing Amount:',
+  done: 'Done',
 };
 
 export default Strings;
