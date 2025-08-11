@@ -5,6 +5,7 @@ import styles from './style'
 import LargeButton from '../../component/largeButton'
 import CustomButton from '../../component/button'
 import CommonPopup from '../../component/commonPopup';
+import Header from '../../component/header';
 
 const Home: React.FC<any> = ({ navigation }) => {
 
@@ -15,7 +16,7 @@ const Home: React.FC<any> = ({ navigation }) => {
     navigation.navigate('SelectPrescription');
   };
 
-   const handleGoBack = () => {
+  const handleGoBack = () => {
     setPopupVisible(false)
     navigation.goBack();
   };
@@ -25,11 +26,13 @@ const Home: React.FC<any> = ({ navigation }) => {
       <ImageBackground
         style={styles.backImageView}
         source={Images.ic_backgroundImage}
+        resizeMode="stretch"
       >
-        <View style={styles.headerIcon}>
-          <Text style={styles.backArrow}>{'←'}</Text>
-        </View>
-
+        <Header
+          backImageSource={Images.ic_left}
+          onBack={() => navigation.goBack()}
+          title=''
+        />
         <View style={styles.content}>
           <Text style={styles.welcomeText}>
             {Strings.welcomeGourab}
@@ -77,7 +80,7 @@ const Home: React.FC<any> = ({ navigation }) => {
           title={Strings.yourAccountBalance}
           icon={Images.ic_vector}
           onClose={() => setPopupVisible(false)}
-          onConfirm={handleGoBack}
+          onConfirm={() => setPopupVisible(false)}
           confirmText="Ok"
           showCancel={false}
           ammount='RS. 15000'

@@ -23,7 +23,8 @@ const ChooseLanguage: React.FC<any> = ({ navigation }) => {
     <View style={styles.container}>
       <ImageBackground
         style={styles.backImageView}
-        source={Images.ic_backgroundImage}>
+        source={Images.ic_backgroundImage}
+        resizeMode="stretch">
         <View style={styles.subContainer}>
           <Text style={styles.title}>{Strings.chooseLanguage}</Text>
           <LargeButton

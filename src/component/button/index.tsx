@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, Pressable } from 'react-native';
 import { WHITE } from '../../constants';
 
 type CustomButtonProps = {
@@ -12,9 +12,9 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   label, color, onPress
 }) => {
   return (
-    <TouchableOpacity style={[styles.button, { backgroundColor: color }]} onPress={onPress}>
+    <Pressable style={[styles.button, { backgroundColor: color }]} onPress={onPress}>
       <Text style={styles.text}>{label}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

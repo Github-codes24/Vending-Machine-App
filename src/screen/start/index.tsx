@@ -5,20 +5,20 @@ import styles from './style'
 
 const Start: React.FC<any> = ({ navigation }) => {
 
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         navigation.navigate('ChooseLanguage');
-    //     }, 3000);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            navigation.navigate('ChooseLanguage');
+        }, 3000);
 
-    //     return () => clearTimeout(timer);
-    // }, []);
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <ImageBackground
             style={styles.backImageView}
             imageStyle={styles.backImageView}
             source={Images.ic_backgroundImage}
-            resizeMode="cover">
+            resizeMode="stretch">
             <View style={styles.container}>
                 <Text style={styles.title}>{Strings.welcome}</Text>
                 <Image

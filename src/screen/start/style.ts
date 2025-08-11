@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { DARK_GREEN } from '../../constants';
+import { BACKGROUNDCOLOR, DARK_GREEN } from '../../constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -7,11 +7,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    // backgroundColor: 'red'
   },
   backImageView: {
     flex: 1,
-    backgroundColor: 'red'
+    backgroundColor: BACKGROUNDCOLOR,
   },
   title: {
     fontSize: 36,
@@ -23,7 +22,7 @@ const styles = StyleSheet.create({
   imageStyle: {
     width: 316,
     height: 240,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   subTitle: {
     fontSize: 24,

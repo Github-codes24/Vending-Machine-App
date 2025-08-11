@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { DARK_GREEN } from '../../constants';
 
 type HeaderProps = {
@@ -20,9 +20,9 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <View style={styles.container}>
       {onBack && backImageSource ? (
-        <TouchableOpacity onPress={onBack} style={styles.iconButton}>
+        <Pressable onPress={onBack} style={styles.iconButton}>
           <Image source={backImageSource} style={styles.iconImage} />
-        </TouchableOpacity>
+        </Pressable>
       ) : (
         <View style={styles.placeholder} />
       )}
@@ -30,9 +30,9 @@ const Header: React.FC<HeaderProps> = ({
       <Text style={styles.title}>{title}</Text>
 
       {rightImageSource ? (
-        <TouchableOpacity onPress={onRightPress} style={styles.iconButton}>
+        <Pressable onPress={onRightPress} style={styles.iconButton}>
           <Image source={rightImageSource} style={styles.iconImage} />
-        </TouchableOpacity>
+        </Pressable>
       ) : (
         <View style={styles.placeholder} />
       )}
@@ -48,18 +48,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#EAF5F5',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
+    marginTop: 5,
   },
   iconButton: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
   },
   iconImage: {
-    width: 24,
-    height: 24,
+    width: 48,
+    height: 48,
     resizeMode: 'contain',
   },
   placeholder: {
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     height: 40,
   },
   title: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: '600',
     color: DARK_GREEN,
     textAlign: 'center',

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { DARK_GREEN } from '../../constants';
+import { BACKGROUNDCOLOR, DARK_GREEN } from '../../constants';
 
 export default StyleSheet.create({
   container: {
@@ -7,15 +7,8 @@ export default StyleSheet.create({
   },
   backImageView: {
     flex: 1,
-    resizeMode: 'cover',
-  },
-  headerIcon: {
-    marginTop: 20,
-    marginLeft: 16,
-  },
-  backArrow: {
-    fontSize: 24,
-    color: '#333',
+    backgroundColor: BACKGROUNDCOLOR,
+    justifyContent: 'center',
   },
   content: {
     flex: 0.9,
@@ -33,12 +26,11 @@ export default StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
     marginBottom: 32,
-    color: '#444',
+    color: DARK_GREEN,
   },
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 40,
-    paddingHorizontal: 20,
+    paddingHorizontal: 12,
   },
 });

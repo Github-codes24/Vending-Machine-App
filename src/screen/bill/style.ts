@@ -1,19 +1,23 @@
 import { StyleSheet } from 'react-native';
-import { DARK_GREEN, PERSIAN_GREEN, PRIMARY_COLOR, WHITE } from '../../constants';
+import { BACKGROUNDCOLOR, DARK_GREEN, PERSIAN_GREEN, PRIMARY_COLOR, WHITE } from '../../constants';
 
 const styles = StyleSheet.create({
+  backImageView: {
+    flex: 1,
+    backgroundColor: BACKGROUNDCOLOR,
+    justifyContent: 'center',
+  },
   container: {
     padding: 20,
-    backgroundColor: '#EAF6F6',
     flexGrow: 1,
-    justifyContent : 'center',
+    justifyContent: 'center',
   },
   card: {
     backgroundColor: WHITE,
     borderRadius: 5,
     padding: 10,
     elevation: 4,
-    borderColor : DARK_GREEN,
+    borderColor: DARK_GREEN,
   },
   rowSpace: {
     flexDirection: 'row',
@@ -66,7 +70,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   button: {
-    backgroundColor:PRIMARY_COLOR,
+    backgroundColor: PRIMARY_COLOR,
     paddingVertical: 14,
     borderRadius: 8,
     marginTop: 20,

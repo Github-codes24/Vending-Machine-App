@@ -4,6 +4,7 @@ import { Images, PRIMARY_COLOR, RED, Strings } from '../../constants'
 import styles from './style'
 import LargeButton from '../../component/largeButton'
 import CustomButton from '../../component/button'
+import Header from '../../component/header'
 
 const ChooseRelationship: React.FC<any> = ({ navigation }) => {
 
@@ -21,7 +22,13 @@ const ChooseRelationship: React.FC<any> = ({ navigation }) => {
     <View style={styles.container}>
       <ImageBackground
         style={styles.backImageView}
-        source={Images.ic_backgroundImage}>
+        source={Images.ic_backgroundImage}
+        resizeMode="stretch">
+        <Header
+          backImageSource={Images.ic_left}
+          onBack={() => navigation.goBack()}
+          title=''
+        />
         <View style={styles.subContainer}>
           <Text style={styles.title}>{Strings.selectRelationship}</Text>
           <LargeButton

@@ -3,24 +3,30 @@ import React, { useState } from 'react'
 import { Images, PRIMARY_COLOR, RED, Strings } from '../../constants'
 import styles from './style'
 import CustomButton from '../../component/button'
+import Header from '../../component/header'
 
 const BillAccount: React.FC<any> = ({ navigation }) => {
 
-    const [currentBalance, setCurrentBalance] = useState<string | null>('5000');
-    const [billingAmount, setBillingAmount] = useState<string | null>('5000');
+    const [currentBalance, setCurrentBalance] = useState<string | null>('15,000');
+    const [billingAmount, setBillingAmount] = useState<string | null>('5,000');
 
     const handleContinue = () => {
         navigation.navigate('Bill');
     };
 
     return (
-        <ImageBackground
-            style={styles.backImageView}
-            source={Images.ic_backgroundImage}
-            resizeMode="cover"
-        >
-            <View style={styles.container}>
-                <View style={{ flex: 0.9, justifyContent: 'center' }}>
+        <View style={styles.container}>
+            <ImageBackground
+                style={styles.backImageView}
+                source={Images.ic_backgroundImage}
+                resizeMode="stretch"
+            >
+                <Header
+                    backImageSource={Images.ic_left}
+                    onBack={() => navigation.goBack()}
+                    title=''
+                />
+                <View style={styles.content}>
                     <View style={styles.subContainer}>
                         <Text style={styles.title}>{Strings.currentBalance}</Text>
                         <Text style={styles.subTitle}>Rs {currentBalance}</Text>
@@ -44,8 +50,8 @@ const BillAccount: React.FC<any> = ({ navigation }) => {
                         onPress={handleContinue}
                     />
                 </View>
-            </View>
-        </ImageBackground>
+            </ImageBackground>
+        </View>
     )
 }
 export default BillAccount

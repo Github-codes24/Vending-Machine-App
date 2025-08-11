@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     text: {
         color: PERSIAN_GREEN,
         fontSize: 16,
-        fontWeight :600,
+        fontWeight: 600,
     },
     selectedText: {
         color: WHITE,

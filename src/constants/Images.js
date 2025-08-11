@@ -8,6 +8,7 @@ export const Images = {
   ic_unChecked: require('../assets/image/unChecked.png'),
   ic_chekedIcon: require('../assets/image/chekedIcon.png'),
   ic_vector: require('../assets/image/vector.png'),
+  ic_left: require('../assets/image/left.png'),
 };
 
 export default Images;

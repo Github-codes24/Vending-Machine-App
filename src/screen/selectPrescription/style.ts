@@ -1,11 +1,15 @@
 import { StyleSheet } from 'react-native';
-import { DARK_GREEN, PERSIAN_GREEN, RED } from '../../constants';
+import { BACKGROUNDCOLOR, DARK_GREEN, PERSIAN_GREEN, RED } from '../../constants';
 
 const styles = StyleSheet.create({
- container: {
+  container: {
     flex: 1,
-    backgroundColor: '#EAF5F5',
+  },
+  backImageView: {
+    flex: 1,
     paddingTop: 50,
+    backgroundColor: BACKGROUNDCOLOR,
+    justifyContent: 'center'
   },
   title: {
     fontSize: 22,
@@ -19,7 +23,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginBottom: 20,
     marginTop: 10,
-    marginHorizontal : 20,
+    marginHorizontal: 20,
   },
   cancelBtn: {
     backgroundColor: RED,

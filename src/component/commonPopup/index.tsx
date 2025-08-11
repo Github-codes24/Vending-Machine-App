@@ -6,12 +6,11 @@ import {
   Text,
   Modal,
   StyleSheet,
-  TouchableOpacity,
+  Pressable,
   Image,
   ImageSourcePropType,
 } from 'react-native';
 import { DARK_GREEN, PRIMARY_COLOR, WHITE } from '../../constants';
-
 interface CommonPopupProps {
   visible: boolean;
   onClose: () => void;
@@ -51,13 +50,13 @@ const CommonPopup: React.FC<CommonPopupProps> = ({
           }
           <View style={styles.buttons}>
             {showCancel && (
-              <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
+              <Pressable onPress={onClose} style={styles.cancelButton}>
                 <Text style={styles.cancelText}>{cancelText}</Text>
-              </TouchableOpacity>
+              </Pressable>
             )}
-            <TouchableOpacity onPress={onConfirm} style={styles.confirmButton}>
+            <Pressable onPress={onConfirm} style={styles.confirmButton}>
               <Text style={styles.confirmText}>{confirmText}</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </View>

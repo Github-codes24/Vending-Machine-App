@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
 import { DARK_GREEN, Images, PERSIAN_GREEN, WHITE } from '../../constants';
 
 interface Props {
@@ -10,17 +10,17 @@ interface Props {
 
 const PrescriptionCard: React.FC<Props> = ({ id, selected, onPress }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.card, selected && styles.selectedCard]}>
+    <Pressable onPress={onPress} style={[styles.card, selected && styles.selectedCard]}>
       <Image
         source={Images.ic_dummyImg}
         style={styles.image}
         resizeMode="contain"
       />
-      <Text style={styles.text}>{id}</Text>
+      <Text style={[styles.text, { color: selected ? WHITE : DARK_GREEN }]}>{id}</Text>
       <View style={[styles.radioOuter, selected && styles.radioOuterSelected]}>
         {selected && <View style={styles.radioInner} />}
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
@@ -31,12 +31,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderColor: PERSIAN_GREEN,
-    borderWidth: 1,
-    padding: 8,
+    borderWidth: 2,
+    padding: 10,
     marginVertical: 6,
     borderRadius: 8,
     marginHorizontal: 20,
-    backgroundColor: WHITE,
   },
   selectedCard: {
     backgroundColor: PERSIAN_GREEN,
@@ -49,8 +48,7 @@ const styles = StyleSheet.create({
   text: {
     flex: 1,
     fontSize: 22,
-    fontWeight : '600',
-    color: DARK_GREEN,
+    fontWeight: '600',
   },
   radioOuter: {
     width: 22,
