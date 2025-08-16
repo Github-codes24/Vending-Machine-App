@@ -5,10 +5,12 @@ import styles from './style'
 import LargeButton from '../../component/largeButton'
 import CustomButton from '../../component/button'
 import Header from '../../component/header'
+import CommonPopup from '../../component/commonPopup'
 
 const ChooseRelationship: React.FC<any> = ({ navigation }) => {
 
   const [selected, setSelected] = useState<string | null>('Self');
+  const [popupVisible, setPopupVisible] = useState(false);
 
   const handleContinue = () => {
     if (selected) {
@@ -16,6 +18,11 @@ const ChooseRelationship: React.FC<any> = ({ navigation }) => {
     } else {
       Alert.alert('Please select a language');
     }
+  };
+
+  const handleGoBack = () => {
+    setPopupVisible(false)
+    navigation.goBack();
   };
 
   return (
@@ -66,7 +73,7 @@ const ChooseRelationship: React.FC<any> = ({ navigation }) => {
           <CustomButton
             label={Strings.cancel}
             color={RED}
-            onPress={() => setSelected(null)}
+            onPress={() => setPopupVisible(true)}
           />
           <CustomButton
             label={Strings.continue}
@@ -74,6 +81,16 @@ const ChooseRelationship: React.FC<any> = ({ navigation }) => {
             onPress={handleContinue}
           />
         </View>
+        <CommonPopup
+          visible={popupVisible}
+          title={Strings.areYouSureWantToCancelTheProcess}
+          icon={Images.ic_vector}
+          onClose={() => setPopupVisible(false)}
+          onConfirm={handleGoBack}
+          confirmText="YES"
+          cancelText="NO"
+          showCancel={true}
+        />
       </ImageBackground>
     </View>
   )

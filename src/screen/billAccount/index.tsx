@@ -4,15 +4,23 @@ import { Images, PRIMARY_COLOR, RED, Strings } from '../../constants'
 import styles from './style'
 import CustomButton from '../../component/button'
 import Header from '../../component/header'
+import CommonPopup from '../../component/commonPopup'
 
 const BillAccount: React.FC<any> = ({ navigation }) => {
 
     const [currentBalance, setCurrentBalance] = useState<string | null>('15,000');
     const [billingAmount, setBillingAmount] = useState<string | null>('5,000');
+    const [popupVisible, setPopupVisible] = useState(false);
 
     const handleContinue = () => {
-        navigation.navigate('Bill');
+        navigation.navigate('MedicineDispatched');
     };
+
+    const handleGoBack = () => {
+        setPopupVisible(false)
+        navigation.goBack();
+    };
+
 
     return (
         <View style={styles.container}>
@@ -40,9 +48,7 @@ const BillAccount: React.FC<any> = ({ navigation }) => {
                     <CustomButton
                         label={Strings.cancel}
                         color={RED}
-                        onPress={() =>
-                            console.log('cancle')
-                        }
+                        onPress={() => setPopupVisible(true)}
                     />
                     <CustomButton
                         label={Strings.continue}
@@ -50,6 +56,16 @@ const BillAccount: React.FC<any> = ({ navigation }) => {
                         onPress={handleContinue}
                     />
                 </View>
+                <CommonPopup
+                    visible={popupVisible}
+                    title={Strings.areYouSureWantToCancelTheProcess}
+                    icon={Images.ic_vector}
+                    onClose={() => setPopupVisible(false)}
+                    onConfirm={handleGoBack}
+                    confirmText="YES"
+                    cancelText="NO"
+                    showCancel={true}
+                />
             </ImageBackground>
         </View>
     )

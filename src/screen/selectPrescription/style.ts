@@ -7,9 +7,14 @@ const styles = StyleSheet.create({
   },
   backImageView: {
     flex: 1,
-    paddingTop: 50,
     backgroundColor: BACKGROUNDCOLOR,
-    justifyContent: 'center'
+    justifyContent: 'center',
+  },
+  content: {
+    flex: 0.895,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    marginTop :10,
   },
   title: {
     fontSize: 22,
@@ -20,30 +25,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
-    marginTop: 10,
-    marginHorizontal: 20,
-  },
-  cancelBtn: {
-    backgroundColor: RED,
-    paddingHorizontal: 30,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  continueBtn: {
-    backgroundColor: PERSIAN_GREEN,
-    paddingHorizontal: 30,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  cancelText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  continueText: {
-    color: '#fff',
-    fontWeight: '600',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    marginTop :15,
   },
 });
 

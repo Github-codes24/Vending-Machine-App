@@ -9,6 +9,7 @@ import Header from '../../component/header';
 
 const Home: React.FC<any> = ({ navigation }) => {
 
+  const [selected, setSelected] = useState<string | null>(Strings.checkBalance);
   const [popupVisible, setPopupVisible] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
@@ -43,13 +44,20 @@ const Home: React.FC<any> = ({ navigation }) => {
 
           <LargeButton
             label={Strings.checkBalance}
-            selected={true}
-            onPress={() => setIsPopupVisible(true)}
+            selected={selected === Strings.checkBalance}
+            onPress={() => {
+
+              setIsPopupVisible(true)
+              setSelected(Strings.checkBalance)
+            }}
           />
           <LargeButton
             label={Strings.prescriptionSelection}
-            selected={false}
-            onPress={() => console.log('Prescription Selection Pressed')}
+            selected={selected === Strings.prescriptionSelection}
+            onPress={() => {
+              navigation.navigate('SelectPrescription');
+              setSelected(Strings.prescriptionSelection)
+            }}
           />
         </View>
 
@@ -74,16 +82,18 @@ const Home: React.FC<any> = ({ navigation }) => {
           confirmText="YES"
           cancelText="NO"
           showCancel={true}
+          showOk={false}
         />
         <CommonPopup
           visible={isPopupVisible}
           title={Strings.yourAccountBalance}
           icon={Images.ic_vector}
-          onClose={() => setPopupVisible(false)}
-          onConfirm={() => setPopupVisible(false)}
-          confirmText="Ok"
+          onClose={() => setIsPopupVisible(false)}
+          onConfirm={() => setIsPopupVisible(false)}
           showCancel={false}
-          ammount='RS. 15000'
+          showOk={true}
+          ammount='RS. 15,000'
+          okText='Ok'
         />
       </ImageBackground>
     </View>

@@ -1,6 +1,3 @@
-// components/CommonPopup.tsx
-
-import React from 'react';
 import {
   View,
   Text,
@@ -20,7 +17,9 @@ interface CommonPopupProps {
   confirmText?: string;
   cancelText?: string;
   showCancel?: boolean;
-  ammount?:string,
+  showOk?: boolean;
+  ammount?: string,
+  okText?: string,
 }
 
 const CommonPopup: React.FC<CommonPopupProps> = ({
@@ -33,6 +32,8 @@ const CommonPopup: React.FC<CommonPopupProps> = ({
   confirmText = 'YES',
   cancelText = 'NO',
   showCancel = true,
+  showOk,
+  okText = 'OK'
 }) => {
   return (
     <Modal
@@ -45,19 +46,24 @@ const CommonPopup: React.FC<CommonPopupProps> = ({
         <View style={styles.container}>
           {icon && <Image source={icon} style={styles.icon} />}
           <Text style={styles.title}>{title}</Text>
-          {ammount && 
-           <Text style={styles.ammountTxt}>{ammount}</Text>
+          {ammount &&
+            <Text style={styles.ammountTxt}>{ammount}</Text>
           }
-          <View style={styles.buttons}>
-            {showCancel && (
+          {showCancel && (
+            <View style={styles.buttons}>
               <Pressable onPress={onClose} style={styles.cancelButton}>
                 <Text style={styles.cancelText}>{cancelText}</Text>
               </Pressable>
-            )}
-            <Pressable onPress={onConfirm} style={styles.confirmButton}>
-              <Text style={styles.confirmText}>{confirmText}</Text>
+              <Pressable onPress={onConfirm} style={styles.confirmButton}>
+                <Text style={styles.confirmText}>{confirmText}</Text>
+              </Pressable>
+            </View>
+          )}
+          {showOk && (
+            <Pressable onPress={onClose} style={styles.OkButton}>
+              <Text style={styles.cancelText}>{okText}</Text>
             </Pressable>
-          </View>
+          )}
         </View>
       </View>
     </Modal>
@@ -89,16 +95,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight:'500',
+    fontWeight: '500',
     textAlign: 'center',
-    marginVertical: 10,
+    marginTop: 10,
     color: DARK_GREEN,
   },
-  ammountTxt : {
+  ammountTxt: {
     fontSize: 24,
-    fontWeight:'800',
+    fontWeight: '800',
     textAlign: 'center',
-    marginVertical: 10,
+    marginTop: 10,
     color: DARK_GREEN,
   },
   buttons: {
@@ -118,6 +124,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 8,
+  },
+  OkButton: {
+    backgroundColor: PRIMARY_COLOR,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 20,
+    width : '60%',
   },
   cancelText: {
     color: PRIMARY_COLOR,

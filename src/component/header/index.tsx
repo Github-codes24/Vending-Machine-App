@@ -52,14 +52,14 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   iconButton: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
   },
   iconImage: {
-    width: 48,
-    height: 48,
+    width: 42,
+    height: 42,
     resizeMode: 'contain',
   },
   placeholder: {

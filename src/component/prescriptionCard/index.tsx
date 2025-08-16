@@ -1,25 +1,27 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, ImageSourcePropType } from 'react-native';
 import { DARK_GREEN, Images, PERSIAN_GREEN, WHITE } from '../../constants';
 
 interface Props {
   id: string;
   selected: boolean;
   onPress: () => void;
+  image: ImageSourcePropType;
 }
 
-const PrescriptionCard: React.FC<Props> = ({ id, selected, onPress }) => {
+const PrescriptionCard: React.FC<Props> = ({ id, selected, onPress, image }) => {
   return (
     <Pressable onPress={onPress} style={[styles.card, selected && styles.selectedCard]}>
       <Image
-        source={Images.ic_dummyImg}
+        source={image}
         style={styles.image}
         resizeMode="contain"
       />
       <Text style={[styles.text, { color: selected ? WHITE : DARK_GREEN }]}>{id}</Text>
-      <View style={[styles.radioOuter, selected && styles.radioOuterSelected]}>
-        {selected && <View style={styles.radioInner} />}
-      </View>
+      <Image
+        source={selected ? Images.ic_chekedIcon : Images.ic_unChecked}
+        style={styles.radioOuter}
+      />
     </Pressable>
   );
 };
@@ -35,7 +37,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 6,
     borderRadius: 8,
-    marginHorizontal: 20,
   },
   selectedCard: {
     backgroundColor: PERSIAN_GREEN,
@@ -53,19 +54,5 @@ const styles = StyleSheet.create({
   radioOuter: {
     width: 22,
     height: 22,
-    borderRadius: 11,
-    borderWidth: 2,
-    borderColor: PERSIAN_GREEN,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  radioOuterSelected: {
-    borderColor: WHITE,
-  },
-  radioInner: {
-    width: 10,
-    height: 10,
-    backgroundColor: WHITE,
-    borderRadius: 5,
   },
 });

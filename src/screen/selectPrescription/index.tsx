@@ -1,18 +1,65 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, Alert, ImageBackground } from 'react-native';
+import { View, FlatList, ImageBackground } from 'react-native';
 import PrescriptionCard from '../../component/prescriptionCard';
 import styles from './style';
 import CustomButton from '../../component/button';
 import { Images, PRIMARY_COLOR, RED, Strings } from '../../constants';
 import Header from '../../component/header';
+import PrescriptionPopup from '../../component/PrescriptionPopup';
+import CommonPopup from '../../component/commonPopup';
 
-const prescriptions = Array(8).fill({ id: '#0000125' });
+const prescriptions = [
+    {
+        images : Images.ic_dummyImg,
+        id : '#0000125',
+    },
+    {
+        images : Images.ic_dummyImg,
+        id : '#0000125',
+    },
+    {
+        images : Images.ic_dummyImg,
+        id : '#0000125',
+    },
+    {
+        images : Images.ic_dummyImg,
+        id : '#0000125',
+    },
+    {
+        images : Images.ic_dummyImg,
+        id : '#0000125',
+    },
+    {
+        images : Images.ic_dummyImg,
+        id : '#0000125',
+    },
+    {
+        images : Images.ic_dummyImg,
+        id : '#0000125',
+    },
+    {
+        images : Images.ic_dummyImg,
+        id : '#0000125',
+    },
+]
 
 const SelectPrescription: React.FC<any> = ({ navigation }) => {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
+    const [popupVisible, setPopupVisible] = useState(false);
+    const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+    const handleOnPress = (index: number) => {
+        setSelectedIndex(index)
+        setPopupVisible(true)
+    };
 
     const handleContinue = () => {
         navigation.navigate('ChooseRelationship');
+    };
+
+    const handleGoBack = () => {
+        setIsPopupVisible(false)
+        navigation.goBack();
     };
 
     return (
@@ -26,22 +73,25 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
                     onBack={() => navigation.goBack()}
                     title={Strings.selectPrescription}
                 />
-                <FlatList
-                    data={prescriptions}
-                    keyExtractor={(_, index) => index.toString()}
-                    renderItem={({ item, index }) => (
-                        <PrescriptionCard
-                            id={item.id}
-                            selected={index === selectedIndex}
-                            onPress={() => setSelectedIndex(index)}
-                        />
-                    )}
-                />
+                <View style={styles.content}>
+                    <FlatList
+                        data={prescriptions}
+                        keyExtractor={(_, index) => index.toString()}
+                        renderItem={({ item, index }) => (
+                            <PrescriptionCard
+                                id={item.id}
+                                image={item.images}
+                                selected={index === selectedIndex}
+                                onPress={() => handleOnPress(index)}
+                            />
+                        )}
+                    />
+                </View>
                 <View style={styles.buttonContainer}>
                     <CustomButton
                         label={Strings.cancel}
                         color={RED}
-                        onPress={() => setSelectedIndex(null)}
+                        onPress={() => setIsPopupVisible(true)}
                     />
                     <CustomButton
                         label={Strings.continue}
@@ -49,6 +99,22 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
                         onPress={handleContinue}
                     />
                 </View>
+                <PrescriptionPopup
+                    visible={popupVisible}
+                    onClose={() => setPopupVisible(false)}
+                    title='Prescription No.0000125'
+                    image={Images.ic_dummyImg}
+                />
+                <CommonPopup
+                    visible={isPopupVisible}
+                    title={Strings.areYouSureWantToCancelTheProcess}
+                    icon={Images.ic_vector}
+                    onClose={() => setIsPopupVisible(false)}
+                    onConfirm={handleGoBack}
+                    confirmText="YES"
+                    cancelText="NO"
+                    showCancel={true}
+                />
             </ImageBackground>
         </View>
     );

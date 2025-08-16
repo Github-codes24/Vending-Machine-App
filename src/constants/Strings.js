@@ -1,8 +1,4 @@
 import { appInfo } from './Config';
-
-/**
- * Decalre all the strings here for using in throughout the app.
- */
 export const Strings = {
   welcome: 'WelCome',
   pleaseScanYourRFIDCard: 'Please scan your RFID card',
@@ -29,6 +25,12 @@ export const Strings = {
   currentBalance: 'Current Balance:',
   billingAmount: 'Billing Amount:',
   done: 'Done',
+  viewBill: 'View Bill',
+  doWantConfirmThisTransaction: 'Do you want to confirm\nthis transaction?',
+  transactionCancelledDue: 'Transaction cancelled due to\ninsufficient balance',
+  thankYouCustomerName: 'Thank You\nCustomer Name',
+  collectYourMedicine: 'Collect your medicine',
+  theMedicineDispatched: 'The medicine\nis being dispatched',
 };
 
 export default Strings;
