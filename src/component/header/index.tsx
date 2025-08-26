@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    marginTop: 5,
   },
   iconButton: {
     width: 40,

@@ -1,37 +1,60 @@
 import React from 'react';
-import { Text, StyleSheet, Pressable } from 'react-native';
+import { Text, StyleSheet, Pressable, ViewStyle } from 'react-native';
 import { WHITE } from '../../constants';
 
 type CustomButtonProps = {
   label: string;
   color: string;
   onPress: () => void;
+  style?: ViewStyle;
+  outlined?: boolean; // ✅ NEW: for outlined buttons like "Back"
 };
 
 const CustomButton: React.FC<CustomButtonProps> = ({
-  label, color, onPress
+  label,
+  color,
+  onPress,
+  style,
+  outlined = false,
 }) => {
   return (
-    <Pressable style={[styles.button, { backgroundColor: color }]} onPress={onPress}>
-      <Text style={styles.text}>{label}</Text>
+    <Pressable
+      style={[
+        styles.button,
+        outlined
+          ? {
+              borderColor: color,
+              borderWidth: 2,
+              backgroundColor: 'transparent',
+            }
+          : { backgroundColor: color },
+        style,
+      ]}
+      onPress={onPress}
+    >
+      <Text style={[styles.text, { color: outlined ? color : WHITE }]}>
+        {label}
+      </Text>
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     borderRadius: 8,
-    marginHorizontal: 8,
     alignItems: 'center',
+    justifyContent: 'center',
+    maxWidth: 240,
+    minWidth: 80,
+    flex: 1,
+    marginHorizontal: 4,
   },
   text: {
-    color: WHITE,
     fontSize: 16,
     fontWeight: '600',
   },
 });
-
 
 export default CustomButton;
