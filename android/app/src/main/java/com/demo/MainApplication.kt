@@ -1,4 +1,4 @@
-package com.vendingmachine
+package com.demo
 
 import android.app.Application
 import com.facebook.react.PackageList
