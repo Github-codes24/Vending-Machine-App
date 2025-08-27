@@ -45,44 +45,65 @@ const DynamicPopup: React.FC<DynamicPopupProps> = ({
         source={Images.ic_backgroundImage}
         resizeMode="stretch"
       >
-        <View style={styles.popupContainer}>
-          {type === 'cancel' && (
-            <>
-              <Text style={styles.title}>Are you sure you want to cancel?</Text>
-              <View style={styles.buttonRow}>
-                <CustomButton
-                  label="Cancel"
-                  color={RED}
-                  onPress={onClose}
-                  style={styles.button}
-                />
-                <CustomButton
-                  label="Yes, Exit"
-                  color={PRIMARY_COLOR}
-                  outlined
-                  onPress={onConfirm}
-                  style={styles.button}
-                />
-              </View>
-            </>
-          )}
+        <View style={styles.container}>
+          {/* Content Section */}
+          <View style={styles.contentSection}>
+            <View style={styles.popupContainer}>
+              {type === 'cancel' && (
+                <Text style={styles.title}>
+                  Are you sure you want to cancel?
+                </Text>
+              )}
 
-          {type === 'balance' && (
-            <>
-              <Text style={styles.title}>Your Account Balance is</Text>
-              <Text style={styles.balanceText}>{balanceAmount}</Text>
+              {type === 'balance' && (
+                <>
+                  <Text style={styles.title}>Your Account Balance is</Text>
+                  <Text style={styles.balanceText}>{balanceAmount}</Text>
+                </>
+              )}
+            </View>
+          </View>
 
-              <View style={styles.buttonRow}>
-                <CustomButton
-                  label="Back"
-                  color={PRIMARY_COLOR}
-                  outlined
-                  onPress={onClose}
-                  style={styles.button}
-                />
-              </View>
-            </>
-          )}
+          {/* Buttons Section - Fixed at Bottom */}
+          <View style={styles.buttonSection}>
+            <View style={styles.buttonRow}>
+              {type === 'cancel' && (
+                <>
+                  <CustomButton
+                    label="Cancel"
+                    color={RED}
+                    onPress={onClose}
+                    style={styles.button}
+                  />
+                  <CustomButton
+                    label="Yes, Exit"
+                    color={PRIMARY_COLOR}
+                    outlined
+                    onPress={onConfirm}
+                    style={styles.button}
+                  />
+                </>
+              )}
+
+              {type === 'balance' && (
+                <>
+                  <CustomButton
+                    label="Cancel"
+                    color={RED}
+                    onPress={onConfirm}
+                    style={styles.button}
+                  />
+                  <CustomButton
+                    label="Back"
+                    color={PRIMARY_COLOR}
+                    outlined
+                    onPress={onClose}
+                    style={styles.button}
+                  />
+                </>
+              )}
+            </View>
+          </View>
         </View>
       </ImageBackground>
     </Modal>
@@ -93,39 +114,51 @@ const styles = StyleSheet.create({
   modalOverlay: {
     width,
     height,
+    backgroundColor: BACKGROUNDCOLOR,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  contentSection: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: BACKGROUNDCOLOR,
+    paddingHorizontal: 20,
   },
   popupContainer: {
     width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    maxWidth: 400,
   },
   title: {
     fontSize: 22,
     fontWeight: '500',
-    color: DARK_GREEN,
+    color: '#333',
     textAlign: 'center',
     marginBottom: 10,
   },
   balanceText: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: '700',
-    marginVertical: 20,
+    marginTop: 20,
     color: DARK_GREEN,
     textAlign: 'center',
   },
+  buttonSection: {
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+    paddingTop: 20,
+  },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 12,
-    marginTop: 20,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 15,
   },
   button: {
-    minWidth: 100,
+    flex: 1,
+    minWidth: 120,
+    paddingVertical: 15,
   },
 });
 

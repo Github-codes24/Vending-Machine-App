@@ -1,4 +1,3 @@
-import { appInfo } from './Config';
 export const Strings = {
   welcome: 'WelCome',
   pleaseScanYourRFIDCard: 'Please scan your RFID card',
