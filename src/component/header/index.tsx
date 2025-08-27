@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { DARK_GREEN } from '../../constants';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type HeaderProps = {
   title: string;
@@ -17,25 +18,28 @@ const Header: React.FC<HeaderProps> = ({
   rightImageSource,
   onRightPress,
 }) => {
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
-      {onBack && backImageSource ? (
-        <Pressable onPress={onBack} style={styles.iconButton}>
-          <Image source={backImageSource} style={styles.iconImage} />
-        </Pressable>
-      ) : (
-        <View style={styles.placeholder} />
-      )}
+    <View style={{ paddingTop: top }}>
+      <View style={[styles.container]}>
+        {onBack && backImageSource ? (
+          <Pressable onPress={onBack} style={styles.iconButton}>
+            <Image source={backImageSource} style={styles.iconImage} />
+          </Pressable>
+        ) : (
+          <View style={styles.placeholder} />
+        )}
 
-      <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title}>{title}</Text>
 
-      {rightImageSource ? (
-        <Pressable onPress={onRightPress} style={styles.iconButton}>
-          <Image source={rightImageSource} style={styles.iconImage} />
-        </Pressable>
-      ) : (
-        <View style={styles.placeholder} />
-      )}
+        {rightImageSource ? (
+          <Pressable onPress={onRightPress} style={styles.iconButton}>
+            <Image source={rightImageSource} style={styles.iconImage} />
+          </Pressable>
+        ) : (
+          <View style={styles.placeholder} />
+        )}
+      </View>
     </View>
   );
 };

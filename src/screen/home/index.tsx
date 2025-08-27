@@ -2,28 +2,36 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  ImageBackground,
   StyleSheet,
   Dimensions,
+  ImageBackground,
 } from 'react-native';
 import {
   Images,
   Strings,
   RED,
   PRIMARY_COLOR,
-  BACKGROUNDCOLOR,
   DARK_GREEN,
+  BACKGROUNDCOLOR,
 } from '../../constants';
 import LargeButton from '../../component/largeButton';
 import CustomButton from '../../component/button';
-import CommonPopup from '../../component/commonPopup';
 import Header from '../../component/header';
+import DynamicPopup from '../../component/DynamicPopup';
 
 const Home: React.FC<any> = ({ navigation }) => {
   const [selected, setSelected] = useState<string | null>(Strings.checkBalance);
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isLandscape, setIsLandscape] = useState(false);
+  const [popupType, setPopupType] = useState<'cancel' | 'balance' | null>(null);
+
+  const openCancelPopup = () => setPopupType('cancel');
+  const openBalancePopup = () => setPopupType('balance');
+  const closePopup = () => setPopupType(null);
+
+  const handleConfirmCancel = () => {
+    closePopup();
+    navigation.goBack();
+  };
 
   useEffect(() => {
     const updateLayout = () => {
@@ -32,7 +40,6 @@ const Home: React.FC<any> = ({ navigation }) => {
     };
 
     updateLayout();
-
     const subscription = Dimensions.addEventListener('change', updateLayout);
 
     return () => subscription?.remove();
@@ -46,110 +53,90 @@ const Home: React.FC<any> = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const handleGoBack = () => {
-    setPopupVisible(false);
-    navigation.goBack();
-  };
-
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        style={styles.backImageView}
-        source={Images.ic_backgroundImage}
-        resizeMode="stretch"
-      >
-        {!isLandscape && (
-          <Header
-            backImageSource={Images.ic_left}
-            onBack={() => navigation.goBack()}
-            title=""
-          />
-        )}
+    <ImageBackground
+      style={styles.backImageView}
+      source={Images.ic_backgroundImage}
+      resizeMode="stretch"
+    >
+      {/* Overlay to improve readability */}
+      <View style={styles.overlay} />
 
-        <View style={styles.content}>
-          <Text style={styles.welcomeText}>{Strings.welcomeGourab}</Text>
-          <Text style={styles.subtitleText}>
-            {Strings.howCanWeHelpYouToday}
-          </Text>
+      {!isLandscape && (
+        <Header
+          backImageSource={Images.ic_left}
+          onBack={() => navigation.goBack()}
+          title=""
+        />
+      )}
 
-          <LargeButton
-            label={Strings.checkBalance}
-            selected={selected === Strings.checkBalance}
-            onPress={() => {
-              setIsPopupVisible(true);
-              setSelected(Strings.checkBalance);
-            }}
-          />
-          <LargeButton
-            label={Strings.prescriptionSelection}
-            selected={selected === Strings.prescriptionSelection}
-            onPress={() => {
-              navigation.navigate('SelectPrescription');
-              setSelected(Strings.prescriptionSelection);
-            }}
-          />
-        </View>
+      <View style={styles.content}>
+        <Text style={styles.welcomeText}>{Strings.welcomeGourab}</Text>
+        <Text style={styles.subtitleText}>{Strings.howCanWeHelpYouToday}</Text>
 
-        <View style={styles.buttonContainer}>
-          <CustomButton
-            label={Strings.cancel}
-            color={RED}
-            onPress={() => setPopupVisible(true)}
-            style={isLandscape ? styles.landscapeButton : styles.portraitButton}
-          />
+        <LargeButton
+          label={Strings.checkBalance}
+          selected={selected === Strings.checkBalance}
+          onPress={() => {
+            setSelected(Strings.checkBalance);
+            openBalancePopup();
+          }}
+        />
 
-          {isLandscape && (
-            <View style={styles.rightButtons}>
-              <CustomButton
-                label="Back"
-                color={PRIMARY_COLOR}
-                outlined={true}
-                onPress={handleBack}
-                style={styles.landscapeButton}
-              />
-              <CustomButton
-                label={Strings.continue}
-                color={PRIMARY_COLOR}
-                onPress={handleContinue}
-                style={styles.landscapeButton}
-              />
-            </View>
-          )}
+        <LargeButton
+          label={Strings.prescriptionSelection}
+          selected={selected === Strings.prescriptionSelection}
+          onPress={() => {
+            navigation.navigate('SelectPrescription');
+            setSelected(Strings.prescriptionSelection);
+          }}
+        />
+      </View>
 
-          {!isLandscape && (
+      <View style={styles.buttonContainer}>
+        <CustomButton
+          label={Strings.cancel}
+          color={RED}
+          onPress={openCancelPopup}
+          style={isLandscape ? styles.landscapeButton : styles.portraitButton}
+        />
+
+        {isLandscape && (
+          <View style={styles.rightButtons}>
+            <CustomButton
+              label="Back"
+              color={PRIMARY_COLOR}
+              outlined={true}
+              onPress={handleBack}
+              style={styles.landscapeButton}
+            />
             <CustomButton
               label={Strings.continue}
               color={PRIMARY_COLOR}
               onPress={handleContinue}
-              style={styles.portraitButton}
+              style={styles.landscapeButton}
             />
-          )}
-        </View>
+          </View>
+        )}
 
-        <CommonPopup
-          visible={popupVisible}
-          title={Strings.areYouSureWantToCancelTheProcess}
-          icon={Images.ic_vector}
-          onClose={() => setPopupVisible(false)}
-          onConfirm={handleGoBack}
-          confirmText="YES"
-          cancelText="NO"
-          showCancel={true}
-          showOk={false}
-        />
-        <CommonPopup
-          visible={isPopupVisible}
-          title={Strings.yourAccountBalance}
-          icon={Images.ic_vector}
-          onClose={() => setIsPopupVisible(false)}
-          onConfirm={() => setIsPopupVisible(false)}
-          showCancel={false}
-          showOk={true}
-          ammount="RS. 15,000"
-          okText="Ok"
-        />
-      </ImageBackground>
-    </View>
+        {!isLandscape && (
+          <CustomButton
+            label={Strings.continue}
+            color={PRIMARY_COLOR}
+            onPress={handleContinue}
+            style={styles.portraitButton}
+          />
+        )}
+      </View>
+
+      <DynamicPopup
+        visible={popupType !== null}
+        type={popupType as 'cancel' | 'balance'}
+        onClose={closePopup}
+        onConfirm={handleConfirmCancel}
+        balanceAmount="Rs. 15,000"
+      />
+    </ImageBackground>
   );
 };
 
@@ -160,7 +147,10 @@ const styles = StyleSheet.create({
   backImageView: {
     flex: 1,
     backgroundColor: BACKGROUNDCOLOR,
-    justifyContent: 'center',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255,255,255,0.4)',
   },
   content: {
     flex: 1,
@@ -193,15 +183,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
   },
-  // ✅ Portrait mode: wider buttons (2 buttons)
   portraitButton: {
     width: 150,
-    // maxWidth: 150,
   },
-  // ✅ Landscape mode: narrower buttons (3 buttons)
   landscapeButton: {
     width: 100,
-    // maxWidth: ,
   },
 });
 

@@ -8,7 +8,7 @@ export const Images = {
   ic_left: require('../assets/image/left.png'),
   ic_pleaseWait: require('../assets/image/pleaseWait.gif'),
   ic_whiteImg: require('../assets/image/whiteImg.gif'),
-  ic_cross : require('../assets/image/cross.png')
-}
+  ic_cross: require('../assets/image/cross.png'),
+};
 
 export default Images;
