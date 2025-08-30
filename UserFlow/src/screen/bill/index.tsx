@@ -1,0 +1,121 @@
+import React from 'react';
+import { View, Text, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
+import styles from './style';
+import { Images } from '../../constants';
+
+const medicines = [
+  { name: 'Paracetamol', quantity: 90, cost: 80.0 },
+  { name: 'Vitamin C', quantity: 30, cost: 250.0 },
+  { name: 'Vitamin D', quantity: 4, cost: 74.5 },
+  { name: 'Cough Syrup', quantity: 1, cost: 110.5 },
+  { name: 'Anti biotic', quantity: 60, cost: 120.0 },
+];
+
+const Bill: React.FC<any> = ({ navigation }) => {
+  const total = medicines.reduce((sum, m) => sum + m.cost, 0);
+
+  return (
+    <ImageBackground
+      style={styles.backImageView}
+      source={Images.ic_backgroundImage}
+      resizeMode="stretch"
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.subContainer}>
+          <View style={styles.card}>
+
+            <View style={styles.rowSpace}>
+              <Text style={styles.label}>Bill Number</Text>
+              <Text style={styles.label}>Billing Date</Text>
+            </View>
+
+            <View style={[styles.rowSpace, { marginTop: 2}]}>
+              <Text style={styles.value}>0001</Text>
+              <Text style={styles.value}>25/12/2025</Text>
+            </View>
+
+            <View style={styles.lineView}></View>
+
+            <Text style={[styles.sectionTitle]}>Patient Information</Text>
+
+            <View style={styles.infoGrid}>
+
+              <View style={styles.rowSpace}>
+                <Text style={styles.label}>Name</Text>
+                <Text style={styles.label}>Age</Text>
+              </View>
+              <View style={[styles.rowSpace,{marginTop:1}]}>
+                <Text style={styles.value}>Aarti Gupta</Text>
+                <Text style={styles.value}>35</Text>
+              </View>
+
+              <View style={styles.rowSpace}>
+                <Text style={styles.label}>Phone No.</Text>
+                 <Text style={styles.label}>Date of Birth</Text>
+                 
+                  </View>
+              <View style={[styles.rowSpace,{marginTop:1}]}>
+               <Text style={styles.value}>+91 9876542876</Text>
+                <Text style={styles.value}>05/11/1990</Text>
+              </View>
+
+              <View style={styles.rowSpace}>
+                <Text style={styles.label}>Email</Text>
+                <Text style={styles.label}>Gender</Text>
+              </View>
+              <View style={[styles.rowSpace,{marginTop:1}]}>
+                <Text style={styles.value}>aarti@123</Text>
+                <Text style={styles.value}>Female</Text>
+              </View>
+              <Text style={[styles.label,{marginTop:7}]}>Address</Text>
+              <Text style={[styles.value, { flex: 1 }]}>Lonavla Pune 165456</Text>
+            </View>
+
+            <View style={styles.lineView}></View>
+
+            <Text style={styles.sectionTitle}>List of Prescribed Medicine</Text>
+
+            <View style={styles.tableHeader}>
+              <Text style={[styles.tableText, { flex: 2 }]}>Medication Name</Text>
+              <Text style={[styles.tableText, { flex: 1 }]}>Total Item</Text>
+              <Text style={[styles.tableText, { flex: 1 }]}>Total Cost</Text>
+            </View>
+
+            {medicines.map((med, index) => (
+              <View key={index} style={[styles.tableRow, {
+                borderBottomWidth: index == 5 ? 0 : 0.5
+              }]}>
+                <Text style={[styles.rowText, { flex: 2 }]}>{med.name}</Text>
+                <Text style={[styles.rowText, { flex: 1 }]}>{med.quantity}</Text>
+                <Text style={[styles.rowText, { flex: 1 }]}>{med.cost.toFixed(2)}</Text>
+              </View>
+            ))}
+
+            <View  style={[styles.tableRow, {
+                borderBottomWidth:  0 
+              }]}>
+              <Text style={[styles.rowTextBold, { flex: 2, fontWeight: '700', }]}>Total</Text>
+              <Text style={{ flex: 1 }}></Text>
+              <Text style={[styles.rowTextBold, { flex: 1 }]}>{total}</Text>
+            </View>
+
+            <View style={styles.lineView}></View>
+
+            <Text style={[styles.label, { marginLeft: 15 }]}>Available Account Balance</Text>
+            <Text style={[styles.value, { marginLeft: 15 }]}>Rs. 12,000</Text>
+
+          </View>
+
+        </View>
+      </ScrollView>
+
+      <TouchableOpacity style={styles.button} onPress={() =>
+        navigation.navigate('MedicineDispatched', { billStatus: true })
+      }>
+        <Text style={styles.buttonText}>Done</Text>
+      </TouchableOpacity>
+    </ImageBackground>
+  );
+};
+
+export default Bill;
