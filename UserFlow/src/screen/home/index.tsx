@@ -5,7 +5,12 @@ import {
   StyleSheet,
   Dimensions,
   ImageBackground,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
+import axios from 'axios';
+// Or use your userStore if you prefer
+import useUserStore from '../../store/userStore';
 import {
   Images,
   Strings,
@@ -20,9 +25,13 @@ import Header from '../../component/header';
 import DynamicPopup from '../../component/DynamicPopup';
 
 const Home: React.FC<any> = ({ navigation }) => {
+  const { user, getUserBalance, isLoading, error, balance } = useUserStore();
   const [selected, setSelected] = useState<string | null>(Strings.checkBalance);
   const [isLandscape, setIsLandscape] = useState(false);
   const [popupType, setPopupType] = useState<'cancel' | 'balance' | null>(null);
+
+  // If using Zustand store instead
+  // const { user, isLoading, error, fetchUserProfile } = useUserStore();
 
   const openCancelPopup = () => setPopupType('cancel');
   const openBalancePopup = () => setPopupType('balance');
@@ -32,6 +41,16 @@ const Home: React.FC<any> = ({ navigation }) => {
     closePopup();
     navigation.goBack();
   };
+
+  const fetchUserBalance = () => {
+    if (!user?.rfid) return;
+    getUserBalance(user?.rfid);
+  };
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    fetchUserBalance();
+  }, [user]);
 
   useEffect(() => {
     const updateLayout = () => {
@@ -46,12 +65,42 @@ const Home: React.FC<any> = ({ navigation }) => {
   }, []);
 
   const handleContinue = () => {
-    navigation.navigate('SelectPrescription');
+    navigation.navigate('SelectPrescription', { userId: user?.id });
   };
 
   const handleBack = () => {
     navigation.goBack();
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <View style={[styles.container, styles.centerContent]}>
+        <ActivityIndicator size="large" color={DARK_GREEN} />
+        <Text style={styles.loadingText}>Loading user data...</Text>
+      </View>
+    );
+  }
+
+  // Show error state
+  if (error && !balance) {
+    return (
+      <View style={[styles.container, styles.centerContent]}>
+        <Text style={styles.errorText}>{error}</Text>
+        <CustomButton
+          label="Retry"
+          color={PRIMARY_COLOR}
+          onPress={fetchUserBalance}
+          style={styles.retryButton}
+        />
+      </View>
+    );
+  }
+
+  // Format balance for display
+  const formattedBalance = balance
+    ? `Rs. ${balance.toLocaleString()}`
+    : 'Rs. 0';
 
   return (
     <ImageBackground
@@ -70,7 +119,9 @@ const Home: React.FC<any> = ({ navigation }) => {
       )}
 
       <View style={styles.content}>
-        <Text style={styles.welcomeText}>{Strings.welcomeGourab}</Text>
+        <Text style={styles.welcomeText}>
+          {user?.name ? `Welcome ${user.name}` : Strings.welcome}
+        </Text>
         <Text style={styles.subtitleText}>{Strings.howCanWeHelpYouToday}</Text>
 
         <LargeButton
@@ -78,6 +129,8 @@ const Home: React.FC<any> = ({ navigation }) => {
           selected={selected === Strings.checkBalance}
           onPress={() => {
             setSelected(Strings.checkBalance);
+            // Refresh balance before showing popup
+            fetchUserBalance();
             openBalancePopup();
           }}
         />
@@ -86,10 +139,16 @@ const Home: React.FC<any> = ({ navigation }) => {
           label={Strings.prescriptionSelection}
           selected={selected === Strings.prescriptionSelection}
           onPress={() => {
-            navigation.navigate('SelectPrescription');
+            navigation.navigate('SelectPrescription', {
+              userId: user?.id,
+              userName: user?.name,
+            });
             setSelected(Strings.prescriptionSelection);
           }}
         />
+
+        {/* Display additional user info if needed */}
+        {user?.email && <Text style={styles.userInfoText}>{user.email}</Text>}
       </View>
 
       <View style={styles.buttonContainer}>
@@ -133,7 +192,7 @@ const Home: React.FC<any> = ({ navigation }) => {
         type={popupType as 'cancel' | 'balance'}
         onClose={closePopup}
         onConfirm={handleConfirmCancel}
-        balanceAmount="Rs. 15,000"
+        balanceAmount={formattedBalance}
       />
     </ImageBackground>
   );
@@ -157,6 +216,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
   },
+  centerContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: BACKGROUNDCOLOR,
+  },
   welcomeText: {
     fontSize: 36,
     fontWeight: '500',
@@ -169,6 +233,28 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 32,
     color: DARK_GREEN,
+  },
+  userInfoText: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: DARK_GREEN,
+    marginTop: 16,
+    opacity: 0.8,
+  },
+  loadingText: {
+    fontSize: 18,
+    color: DARK_GREEN,
+    marginTop: 20,
+  },
+  errorText: {
+    fontSize: 18,
+    color: RED,
+    marginBottom: 20,
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
+  retryButton: {
+    width: 150,
   },
   buttonContainer: {
     flexDirection: 'row',
