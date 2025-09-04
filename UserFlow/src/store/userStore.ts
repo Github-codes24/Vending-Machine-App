@@ -18,6 +18,7 @@ interface UserState {
   error: string | null;
   isAuthenticated: boolean;
   balance: number;
+  prescriptions: any[];
   
   // Actions
   setUser: (user: User | null) => void;
@@ -28,6 +29,7 @@ interface UserState {
   fetchUserProfile: (rfid: string) => Promise<void>;
   scanRFIDCard: (rfidData: string) => Promise<void>;
   getUserBalance: (rfid: string) => Promise<void>;
+  getUserPrescriptions: (rfid: string) => Promise<void>;
 }
 
 const useUserStore = create<UserState>()(
@@ -38,6 +40,7 @@ const useUserStore = create<UserState>()(
       error: null,
       isAuthenticated: false,
       balance: 0,
+      prescriptions: [],
 
       setUser: (user) => set({ user, isAuthenticated: !!user }),
       setLoading: (loading) => set({ isLoading: loading }),
@@ -114,14 +117,31 @@ const useUserStore = create<UserState>()(
           });
         } catch (error: any) {
           set({
-            error: error.response?.data?.message || 'Failed to fetch balance',
+            error: error.response?.data?.message || 'Failed to fetch  balance',
             isLoading: false,
             balance: 0,
           });
           throw error;
         }
       },
-
+      getUserPrescriptions: async (rfid: string) => {
+        try {
+          set({ isLoading: true, error: null });
+          const prescriptions = await apiService.getUserPrescriptions(rfid);
+          set({
+            prescriptions: prescriptions,
+            isLoading: false,
+          });
+        } catch (error: any) {
+          set({
+            error: error.response?.data?.message || 'Failed to fetch prescriptions',
+            isLoading: false,
+            prescriptions: [],
+          });
+          throw error;
+        }
+      },
+      
       scanRFIDCard: async (rfidData) => {
         try {
           set({ isLoading: true, error: null });

@@ -2,7 +2,7 @@
 import axios, { AxiosInstance } from 'axios';
 import storage from '../utils/storage';
 
-const BASE_URL = `https://vending-machine-backend-xjfo.onrender.com/api`; // Replace with your actual API URL
+const BASE_URL = `https://vending-machine-backend-xjfo.onrender.com/api`; 
 
 class ApiService {
   private axiosInstance: AxiosInstance;
@@ -31,7 +31,6 @@ class ApiService {
     );
   }
 
-  // Make sure this method exists and is public
   public async login(email: string, password: string) {
     try {
       const response = await this.axiosInstance.post('/auth/login', {
@@ -61,6 +60,16 @@ class ApiService {
       throw error;
     }
   }
+
+  public async getUserPrescriptions(rfid: string) {
+    try {
+      const response = await this.axiosInstance.get(`/users/${rfid}/prescriptions`);
+      return response.data?.prescriptions || [];
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   public async scanRFID(rfidData: string) {
     try {
