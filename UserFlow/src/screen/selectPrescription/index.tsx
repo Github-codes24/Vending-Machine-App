@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
-import { View, FlatList, ImageBackground, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  FlatList,
+  ImageBackground,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import PrescriptionCard from '../../component/prescriptionCard';
 import CustomButton from '../../component/button';
 import {
@@ -7,12 +13,11 @@ import {
   DARK_GREEN,
   Images,
   PRIMARY_COLOR,
-  RED,
   Strings,
 } from '../../constants';
 import Header from '../../component/header';
 import PrescriptionPopup from '../../component/PrescriptionPopup';
-import CommonPopup from '../../component/commonPopup';
+import CancelButton from '../../component/button/cancelButton';
 
 const prescriptions = [
   {
@@ -50,9 +55,23 @@ const prescriptions = [
 ];
 
 const SelectPrescription: React.FC<any> = ({ navigation }) => {
+  // Move useState inside the component
+  const [isLandscape, setIsLandscape] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
   const [popupVisible, setPopupVisible] = useState(false);
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+  // Add useEffect for landscape detection
+  useEffect(() => {
+    const updateLayout = () => {
+      const { width, height } = Dimensions.get('window');
+      setIsLandscape(width > height);
+    };
+
+    updateLayout();
+    const subscription = Dimensions.addEventListener('change', updateLayout);
+
+    return () => subscription?.remove();
+  }, []);
 
   const handleOnPress = (index: number) => {
     setSelectedIndex(index);
@@ -61,11 +80,6 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
 
   const handleContinue = () => {
     navigation.navigate('ChooseRelationship');
-  };
-
-  const handleGoBack = () => {
-    setIsPopupVisible(false);
-    navigation.goBack();
   };
 
   return (
@@ -80,6 +94,7 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
           onBack={() => navigation.goBack()}
           title={Strings.selectPrescription}
         />
+
         <View style={styles.content}>
           <FlatList
             data={prescriptions}
@@ -96,40 +111,29 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
             )}
           />
         </View>
+
         <View style={styles.buttonContainer}>
-          <CustomButton
-            label={Strings.cancel}
-            color={RED}
-            onPress={() => setIsPopupVisible(true)}
+          <CancelButton
+            style={isLandscape ? styles.landscapeButton : styles.portraitButton}
           />
           <CustomButton
             label={Strings.continue}
             color={PRIMARY_COLOR}
             onPress={handleContinue}
+            style={isLandscape ? styles.landscapeButton : styles.portraitButton}
           />
         </View>
+
         <PrescriptionPopup
           visible={popupVisible}
           onClose={() => setPopupVisible(false)}
           title="Prescription No.0000125"
           image={Images.ic_dummyImg}
         />
-        <CommonPopup
-          visible={isPopupVisible}
-          title={Strings.areYouSureWantToCancelTheProcess}
-          icon={Images.ic_vector}
-          onClose={() => setIsPopupVisible(false)}
-          onConfirm={handleGoBack}
-          confirmText="YES"
-          cancelText="NO"
-          showCancel={true}
-        />
       </ImageBackground>
     </View>
   );
 };
-
-export default SelectPrescription;
 
 const styles = StyleSheet.create({
   container: {
@@ -142,10 +146,10 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 5, // Reduced from marginTop: 10
+    paddingTop: 5,
   },
   listContainer: {
-    paddingBottom: 10, // Add some padding at bottom of list
+    paddingBottom: 10,
   },
   title: {
     fontSize: 22,
@@ -158,7 +162,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 12,
-    paddingVertical: 10, // Reduced from marginTop: 15
-    paddingBottom: 20, // Add bottom padding for safe area
+    paddingVertical: 10,
+    paddingBottom: 20,
+    gap: 10, // Add gap between buttons
+  },
+  portraitButton: {
+    width: 150,
+    flex: 1,
+  },
+  landscapeButton: {
+    width: 100,
+    flex: 1,
   },
 });
+
+export default SelectPrescription;

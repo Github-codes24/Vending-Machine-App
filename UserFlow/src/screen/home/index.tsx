@@ -8,8 +8,6 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import axios from 'axios';
-// Or use your userStore if you prefer
 import useUserStore from '../../store/userStore';
 import {
   Images,
@@ -23,16 +21,13 @@ import LargeButton from '../../component/largeButton';
 import CustomButton from '../../component/button';
 import Header from '../../component/header';
 import DynamicPopup from '../../component/DynamicPopup';
+import CancelButton from '../../component/button/cancelButton';
 
 const Home: React.FC<any> = ({ navigation }) => {
   const { user, getUserBalance, isLoading, error, balance } = useUserStore();
   const [selected, setSelected] = useState<string | null>(Strings.checkBalance);
   const [isLandscape, setIsLandscape] = useState(false);
   const [popupType, setPopupType] = useState<'cancel' | 'balance' | null>(null);
-
-  // If using Zustand store instead
-  // const { user, isLoading, error, fetchUserProfile } = useUserStore();
-
   const openCancelPopup = () => setPopupType('cancel');
   const openBalancePopup = () => setPopupType('balance');
   const closePopup = () => setPopupType(null);
@@ -47,7 +42,6 @@ const Home: React.FC<any> = ({ navigation }) => {
     getUserBalance(user?.rfid);
   };
 
-  // Fetch user data on component mount
   useEffect(() => {
     fetchUserBalance();
   }, [user]);
@@ -65,14 +59,13 @@ const Home: React.FC<any> = ({ navigation }) => {
   }, []);
 
   const handleContinue = () => {
-    navigation.navigate('SelectPrescription', { userId: user?.id });
+    navigation.navigate('SelectRelationship', { userId: user?.id });
   };
 
   const handleBack = () => {
-    navigation.goBack();
+    navigation.navigate('ChooseLanguage');
   };
 
-  // Show loading state
   if (isLoading) {
     return (
       <View style={[styles.container, styles.centerContent]}>
@@ -82,7 +75,6 @@ const Home: React.FC<any> = ({ navigation }) => {
     );
   }
 
-  // Show error state
   if (error && !balance) {
     return (
       <View style={[styles.container, styles.centerContent]}>
@@ -97,7 +89,6 @@ const Home: React.FC<any> = ({ navigation }) => {
     );
   }
 
-  // Format balance for display
   const formattedBalance = balance
     ? `Rs. ${balance.toLocaleString()}`
     : 'Rs. 0';
@@ -129,7 +120,6 @@ const Home: React.FC<any> = ({ navigation }) => {
           selected={selected === Strings.checkBalance}
           onPress={() => {
             setSelected(Strings.checkBalance);
-            // Refresh balance before showing popup
             fetchUserBalance();
             openBalancePopup();
           }}
@@ -147,16 +137,13 @@ const Home: React.FC<any> = ({ navigation }) => {
           }}
         />
 
-        {/* Display additional user info if needed */}
         {user?.email && <Text style={styles.userInfoText}>{user.email}</Text>}
       </View>
 
       <View style={styles.buttonContainer}>
-        <CustomButton
-          label={Strings.cancel}
-          color={RED}
-          onPress={openCancelPopup}
+        <CancelButton
           style={isLandscape ? styles.landscapeButton : styles.portraitButton}
+          popupTitle="Are you sure you want to cancel the process?"
         />
 
         {isLandscape && (

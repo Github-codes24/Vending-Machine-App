@@ -14,11 +14,15 @@ import Header from '../../component/header';
 import CommonPopup from '../../component/commonPopup';
 import { StyleSheet } from 'react-native';
 import { BACKGROUNDCOLOR } from '../../constants';
+import useUserStore from '../../store/userStore';
+import CancelButton from '../../component/button/cancelButton';
 
-const ChooseRelationship: React.FC<any> = ({ navigation }) => {
+const SelectRelationship: React.FC<any> = ({ navigation }) => {
   const [selected, setSelected] = useState<string | null>('Self');
   const [popupVisible, setPopupVisible] = useState(false);
   const [isLandscape, setIsLandscape] = useState(false);
+
+  const { logout, setUser } = useUserStore();
 
   // ✅ Detect orientation changes
   useEffect(() => {
@@ -49,9 +53,39 @@ const ChooseRelationship: React.FC<any> = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const handleGoBack = () => {
+  // Handle cancel button click - show popup
+  const handleCancelClick = () => {
+    setPopupVisible(true);
+  };
+
+  // Handle popup cancel (NO button)
+  const handlePopupCancel = () => {
     setPopupVisible(false);
-    navigation.goBack();
+  };
+
+  // Handle popup confirm (YES button) - perform logout
+  const handleConfirmCancel = async () => {
+    try {
+      setPopupVisible(false);
+
+      // Call logout from store
+      await logout();
+
+      // Clear user data
+      setUser(null);
+
+      // Navigate to Start screen and reset navigation stack
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Start' }],
+      });
+
+      // Alternative: If you want to just navigate without resetting stack
+      // navigation.navigate('Start');
+    } catch (error) {
+      console.error('Logout error:', error);
+      Alert.alert('Error', 'Failed to logout. Please try again.');
+    }
   };
 
   return (
@@ -64,7 +98,7 @@ const ChooseRelationship: React.FC<any> = ({ navigation }) => {
         {!isLandscape && (
           <Header
             backImageSource={Images.ic_left}
-            onBack={() => navigation.goBack()}
+            onBack={handleBack}
             title=""
           />
         )}
@@ -111,10 +145,7 @@ const ChooseRelationship: React.FC<any> = ({ navigation }) => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <CustomButton
-            label={Strings.cancel}
-            color={RED}
-            onPress={() => setPopupVisible(true)}
+          <CancelButton
             style={isLandscape ? styles.landscapeButton : styles.portraitButton}
           />
 
@@ -150,8 +181,8 @@ const ChooseRelationship: React.FC<any> = ({ navigation }) => {
           visible={popupVisible}
           title={Strings.areYouSureWantToCancelTheProcess}
           icon={Images.ic_vector}
-          onClose={() => setPopupVisible(false)}
-          onConfirm={handleGoBack}
+          onClose={handlePopupCancel}
+          onConfirm={handleConfirmCancel}
           confirmText="YES"
           cancelText="NO"
           showCancel={true}
@@ -211,4 +242,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChooseRelationship;
+export default SelectRelationship;

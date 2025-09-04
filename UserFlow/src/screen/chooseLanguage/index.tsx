@@ -1,5 +1,5 @@
-import { View, Text, ImageBackground, Alert } from 'react-native';
-import React, { useState } from 'react';
+import { View, Text, ImageBackground, Alert, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import {
   Images,
   PRIMARY_COLOR,
@@ -11,9 +11,24 @@ import {
 import LargeButton from '../../component/largeButton';
 import CustomButton from '../../component/button';
 import { StyleSheet } from 'react-native';
+import CancelButton from '../../component/button/cancelButton';
 
 const ChooseLanguage: React.FC<any> = ({ navigation }) => {
   const [selected, setSelected] = useState<string | null>('English');
+  const [isLandscape, setIsLandscape] = useState(false);
+
+  // Detect orientation changes
+  useEffect(() => {
+    const updateLayout = () => {
+      const { width, height } = Dimensions.get('window');
+      setIsLandscape(width > height);
+    };
+
+    updateLayout();
+    const subscription = Dimensions.addEventListener('change', updateLayout);
+
+    return () => subscription?.remove();
+  }, []);
 
   const handleContinue = () => {
     if (selected) {
@@ -54,17 +69,14 @@ const ChooseLanguage: React.FC<any> = ({ navigation }) => {
 
         {/* Bottom Buttons */}
         <View style={styles.buttonContainer}>
-          <CustomButton
-            label={Strings.cancel}
-            color={RED}
-            onPress={() => setSelected('English')}
-            style={styles.cancelButton}
+          <CancelButton
+            style={isLandscape ? styles.landscapeButton : styles.portraitButton}
           />
           <CustomButton
             label={Strings.continue}
             color={PRIMARY_COLOR}
             onPress={handleContinue}
-            style={styles.continueButton}
+            style={isLandscape ? styles.landscapeButton : styles.portraitButton}
           />
         </View>
       </ImageBackground>
@@ -100,13 +112,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
   },
-  cancelButton: {
+  portraitButton: {
     flex: 0.45,
     maxWidth: 240,
   },
-  continueButton: {
+  landscapeButton: {
     flex: 0.45,
-    maxWidth: 240,
+    maxWidth: 150,
   },
 });
 
