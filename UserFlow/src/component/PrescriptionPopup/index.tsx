@@ -9,10 +9,11 @@ import {
 } from 'react-native';
 import { Images, PRIMARY_COLOR, WHITE } from '../../constants';
 import Bill from '../bill';
+
 interface CommonPopupProps {
   visible: boolean;
   onClose: () => void;
-  data: { prescription: any; user: any };
+  data: any;
 }
 
 const PrescriptionPopup: React.FC<CommonPopupProps> = ({
@@ -37,7 +38,7 @@ const PrescriptionPopup: React.FC<CommonPopupProps> = ({
               <Image source={Images.ic_cross} style={styles.icon} />
             </Pressable>
           </View>
-          <Bill prescription={data?.prescription} user={data?.user} />
+          <Bill data={data} />
         </View>
       </View>
     </Modal>

@@ -63,6 +63,7 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
     useUserStore();
   const [isLandscape, setIsLandscape] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const [selectedPrescription, setSelectedPrescription] = useState<any>(null);
   const [popupVisible, setPopupVisible] = useState(false);
 
   console.log('prescriptions', prescriptions);
@@ -97,7 +98,7 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
       const prescription = await apiService.getUserPrescriptionDetails(
         encodeURIComponent(prescriptions[index].id),
       );
-      console.log('prescription', prescription);
+      setSelectedPrescription(prescription);
     } catch (error) {
       console.log('error', error);
     }
@@ -158,7 +159,7 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
         <PrescriptionPopup
           visible={popupVisible}
           onClose={() => setPopupVisible(false)}
-          data={{ prescription: prescriptions[selectedIndex], user }}
+          data={selectedPrescription}
         />
       </ImageBackground>
     </View>

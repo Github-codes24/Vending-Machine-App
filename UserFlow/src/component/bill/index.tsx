@@ -3,15 +3,14 @@ import { StyleSheet, Text, View } from 'react-native';
 import { DARK_GREEN, PRIMARY_COLOR, WHITE } from '../../constants';
 
 interface BillProps {
-  prescription: any;
-  user: string;
+  data: any;
 }
 
-const Bill = ({ user, prescription }: BillProps) => {
-  const medicines = prescription?.medicines ?? [];
+const Bill = ({ data }: BillProps) => {
+  const user = data?.user;
+  const medicines = data?.prescription?.medicines ?? [];
   const total = medicines?.reduce((sum: number, m: any) => sum + m.cost, 0);
-  console.log('medicines', medicines);
-  console.log('user', user);
+
   return (
     <View style={styles.card}>
       <View style={styles.rowSpace}>
@@ -20,8 +19,10 @@ const Bill = ({ user, prescription }: BillProps) => {
       </View>
 
       <View style={[styles.rowSpace, { marginTop: 2 }]}>
-        <Text style={styles.value}>0001</Text>
-        <Text style={styles.value}>25/12/2025</Text>
+        <Text style={styles.value}>{data?.prescription?.id}</Text>
+        <Text style={styles.value}>
+          {new Date(data?.prescription?.collectedAt).toLocaleDateString()}
+        </Text>
       </View>
 
       <View style={styles.lineView}></View>
@@ -34,7 +35,7 @@ const Bill = ({ user, prescription }: BillProps) => {
           <Text style={styles.label}>Age</Text>
         </View>
         <View style={[styles.rowSpace, { marginTop: 1 }]}>
-          <Text style={styles.value}>Aarti Gupta</Text>
+          <Text style={styles.value}>{user?.name}</Text>
           <Text style={styles.value}>35</Text>
         </View>
 
@@ -99,7 +100,9 @@ const Bill = ({ user, prescription }: BillProps) => {
           Total
         </Text>
         <Text style={{ flex: 1 }}></Text>
-        <Text style={[styles.rowTextBold, { flex: 1 }]}>{total}</Text>
+        <Text style={[styles.rowTextBold, { flex: 1 }]}>
+          {total.toFixed(2)}
+        </Text>
       </View>
 
       <View style={styles.lineView}></View>
