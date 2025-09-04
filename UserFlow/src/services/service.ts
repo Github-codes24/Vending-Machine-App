@@ -70,6 +70,15 @@ class ApiService {
     }
   }
 
+  public async getUserPrescriptionDetails(prescriptionId: string) {
+    try {
+      const response = await this.axiosInstance.get(`/prescriptions/${prescriptionId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   public async scanRFID(rfidData: string) {
     try {

@@ -5,6 +5,7 @@ import {
   ImageBackground,
   StyleSheet,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import PrescriptionCard from '../../component/prescriptionCard';
 import CustomButton from '../../component/button';
@@ -18,47 +19,62 @@ import {
 import Header from '../../component/header';
 import PrescriptionPopup from '../../component/PrescriptionPopup';
 import CancelButton from '../../component/button/cancelButton';
+import useUserStore from '../../store/userStore';
+import apiService from '../../services/service';
 
-const prescriptions = [
-  {
-    images: Images.ic_dummyImg,
-    id: '#0000125',
-  },
-  {
-    images: Images.ic_dummyImg,
-    id: '#0000125',
-  },
-  {
-    images: Images.ic_dummyImg,
-    id: '#0000125',
-  },
-  {
-    images: Images.ic_dummyImg,
-    id: '#0000125',
-  },
-  {
-    images: Images.ic_dummyImg,
-    id: '#0000125',
-  },
-  {
-    images: Images.ic_dummyImg,
-    id: '#0000125',
-  },
-  {
-    images: Images.ic_dummyImg,
-    id: '#0000125',
-  },
-  {
-    images: Images.ic_dummyImg,
-    id: '#0000125',
-  },
-];
+// const prescriptions = [
+//   {
+//     images: Images.ic_dummyImg,
+//     id: '#0000125',
+//   },
+//   {
+//     images: Images.ic_dummyImg,
+//     id: '#0000125',
+//   },
+//   {
+//     images: Images.ic_dummyImg,
+//     id: '#0000125',
+//   },
+//   {
+//     images: Images.ic_dummyImg,
+//     id: '#0000125',
+//   },
+//   {
+//     images: Images.ic_dummyImg,
+//     id: '#0000125',
+//   },
+//   {
+//     images: Images.ic_dummyImg,
+//     id: '#0000125',
+//   },
+//   {
+//     images: Images.ic_dummyImg,
+//     id: '#0000125',
+//   },
+//   {
+//     images: Images.ic_dummyImg,
+//     id: '#0000125',
+//   },
+// ];
 
 const SelectPrescription: React.FC<any> = ({ navigation }) => {
   // Move useState inside the component
+  const { prescriptions, getUserPrescriptions, user, isLoading } =
+    useUserStore();
   const [isLandscape, setIsLandscape] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [popupVisible, setPopupVisible] = useState(false);
+
+  console.log('prescriptions', prescriptions);
+
+  const fetchPrescriptions = () => {
+    if (!user?.rfid) return;
+    getUserPrescriptions(user?.rfid);
+  };
+
+  useEffect(() => {
+    fetchPrescriptions();
+  }, [user]);
 
   // Add useEffect for landscape detection
   useEffect(() => {
@@ -73,9 +89,18 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
     return () => subscription?.remove();
   }, []);
 
-  const handleOnPress = (index: number) => {
+  const handleOnPress = async (index: number) => {
     setSelectedIndex(index);
     setPopupVisible(true);
+    // get the image of the selected prescription
+    try {
+      const prescription = await apiService.getUserPrescriptionDetails(
+        encodeURIComponent(prescriptions[index].id),
+      );
+      console.log('prescription', prescription);
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   const handleContinue = () => {
@@ -96,20 +121,26 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
         />
 
         <View style={styles.content}>
-          <FlatList
-            data={prescriptions}
-            keyExtractor={(_, index) => index.toString()}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.listContainer}
-            renderItem={({ item, index }) => (
-              <PrescriptionCard
-                id={item.id}
-                image={item.images}
-                selected={index === selectedIndex}
-                onPress={() => handleOnPress(index)}
-              />
-            )}
-          />
+          {isLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={PRIMARY_COLOR} />
+            </View>
+          ) : (
+            <FlatList
+              data={prescriptions}
+              keyExtractor={(_, index) => index.toString()}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.listContainer}
+              renderItem={({ item, index }) => (
+                <PrescriptionCard
+                  id={item.id}
+                  image={item.images}
+                  selected={index === selectedIndex}
+                  onPress={() => handleOnPress(index)}
+                />
+              )}
+            />
+          )}
         </View>
 
         <View style={styles.buttonContainer}>
@@ -127,8 +158,7 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
         <PrescriptionPopup
           visible={popupVisible}
           onClose={() => setPopupVisible(false)}
-          title="Prescription No.0000125"
-          image={Images.ic_dummyImg}
+          data={{ prescription: prescriptions[selectedIndex], user }}
         />
       </ImageBackground>
     </View>
@@ -173,6 +203,11 @@ const styles = StyleSheet.create({
   landscapeButton: {
     width: 100,
     flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
