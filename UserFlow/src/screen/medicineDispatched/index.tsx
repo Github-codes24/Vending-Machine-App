@@ -9,10 +9,10 @@ import {
   Strings,
 } from '../../constants';
 import CustomButton from '../../component/button';
-
+import useUserStore from '../../store/userStore';
 const MedicineDispatched: React.FC<any> = ({ navigation, route }) => {
   const { billStatus } = route.params || {};
-
+  const { user } = useUserStore();
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
 
@@ -39,7 +39,8 @@ const MedicineDispatched: React.FC<any> = ({ navigation, route }) => {
       {billStatus ? (
         <View style={{ flex: 1, justifyContent: 'center' }}>
           <View style={styles.subContainer}>
-            <Text style={styles.title}>{Strings.thankYouCustomerName}</Text>
+            <Text style={styles.title}>Thank You</Text>
+            <Text style={styles.title}>{user?.name}</Text>
           </View>
           <View style={styles.buttonContainer}>
             <CustomButton

@@ -14,7 +14,7 @@ import {
   PRIMARY_COLOR,
   WHITE,
 } from '../../constants';
-
+import useUserStore from '../../store/userStore';
 const medicines = [
   { name: 'Paracetamol', quantity: 90, cost: 80.0 },
   { name: 'Vitamin C', quantity: 30, cost: 250.0 },
@@ -24,6 +24,7 @@ const medicines = [
 ];
 
 const Bill: React.FC<any> = ({ navigation }) => {
+  const { user } = useUserStore();
   const total = medicines.reduce((sum, m) => sum + m.cost, 0);
 
   return (
