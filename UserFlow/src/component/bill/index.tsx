@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { DARK_GREEN, PRIMARY_COLOR, WHITE } from '../../constants';
-
+import useUserStore from '../../store/userStore';
 interface BillProps {
   data: any;
 }
 
 const Bill = ({ data }: BillProps) => {
+  const { balance } = useUserStore();
   const user = data?.user;
   const medicines = data?.prescription?.medicines ?? [];
   const total = medicines?.reduce((sum: number, m: any) => sum + m.cost, 0);
@@ -36,7 +37,7 @@ const Bill = ({ data }: BillProps) => {
         </View>
         <View style={[styles.rowSpace, { marginTop: 1 }]}>
           <Text style={styles.value}>{user?.name}</Text>
-          <Text style={styles.value}>35</Text>
+          <Text style={styles.value}>{user?.age || 'N/A'}</Text>
         </View>
 
         <View style={styles.rowSpace}>
@@ -44,8 +45,8 @@ const Bill = ({ data }: BillProps) => {
           <Text style={styles.label}>Date of Birth</Text>
         </View>
         <View style={[styles.rowSpace, { marginTop: 1 }]}>
-          <Text style={styles.value}>+91 9876542876</Text>
-          <Text style={styles.value}>05/11/1990</Text>
+          <Text style={styles.value}>{user?.phone || 'N/A'}</Text>
+          <Text style={styles.value}>{user?.dob || 'N/A'}</Text>
         </View>
 
         <View style={styles.rowSpace}>
@@ -53,11 +54,11 @@ const Bill = ({ data }: BillProps) => {
           <Text style={styles.label}>Gender</Text>
         </View>
         <View style={[styles.rowSpace, { marginTop: 1 }]}>
-          <Text style={styles.value}>aarti@123</Text>
-          <Text style={styles.value}>Female</Text>
+          <Text style={styles.value}>{user?.email || 'N/A'}</Text>
+          <Text style={styles.value}>{user?.gender || 'N/A'}</Text>
         </View>
         <Text style={[styles.label, { marginTop: 7 }]}>Address</Text>
-        <Text style={[styles.value, { flex: 1 }]}>Lonavla Pune 165456</Text>
+        <Text style={[styles.value]}>{user?.address || 'N/A'}</Text>
       </View>
 
       <View style={styles.lineView}></View>
@@ -110,7 +111,7 @@ const Bill = ({ data }: BillProps) => {
       <Text style={[styles.label, { marginLeft: 15 }]}>
         Available Account Balance
       </Text>
-      <Text style={[styles.value, { marginLeft: 15 }]}>Rs. 12,000</Text>
+      <Text style={[styles.value, { marginLeft: 15 }]}>Rs. {balance}</Text>
     </View>
   );
 };

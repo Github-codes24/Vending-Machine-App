@@ -50,7 +50,7 @@ export default PrescriptionPopup;
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(0,0,0,0.7)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: WHITE,
+    marginBottom: 14,
   },
   ImageView: {
     width: 300,
