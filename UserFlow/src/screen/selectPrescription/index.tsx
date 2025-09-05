@@ -105,7 +105,7 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
   };
 
   const handleContinue = () => {
-    navigation.navigate('ChooseRelationship');
+    navigation.navigate('SelectRelationship');
   };
 
   return (

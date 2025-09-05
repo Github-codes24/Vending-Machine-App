@@ -16,34 +16,35 @@ import { StyleSheet } from 'react-native';
 import { BACKGROUNDCOLOR } from '../../constants';
 import useUserStore from '../../store/userStore';
 import CancelButton from '../../component/button/cancelButton';
+import { useNavigation } from '@react-navigation/native';
 
-const SelectRelationship: React.FC<any> = ({ navigation }) => {
+const SelectRelationship: React.FC<any> = ({ navigation, route }) => {
   const [selected, setSelected] = useState<string | null>('Self');
   const [popupVisible, setPopupVisible] = useState(false);
   const [isLandscape, setIsLandscape] = useState(false);
 
   const { logout, setUser } = useUserStore();
 
-  // ✅ Detect orientation changes
   useEffect(() => {
     const updateLayout = () => {
       const { width, height } = Dimensions.get('window');
       setIsLandscape(width > height);
     };
 
-    // Initial check
     updateLayout();
 
-    // Listen to orientation changes
     const subscription = Dimensions.addEventListener('change', updateLayout);
 
-    // Cleanup
     return () => subscription?.remove();
   }, []);
 
   const handleContinue = () => {
     if (selected) {
-      navigation.navigate('BillAccount');
+      navigation.navigate('BillAccount', {
+        prescriptionId: route.params?.prescriptionId,
+        prescriptionData: route.params?.prescriptionData,
+        relationship: selected,
+      });
     } else {
       Alert.alert('Please select a relationship');
     }

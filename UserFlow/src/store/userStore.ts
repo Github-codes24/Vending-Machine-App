@@ -10,6 +10,7 @@ interface User {
   name: string;
   email: string;
   rfid?: string;
+  bill?: any;
 }
 
 interface UserState {
@@ -19,6 +20,8 @@ interface UserState {
   isAuthenticated: boolean;
   balance: number;
   prescriptions: any[];
+  bill: any;
+  
   
   // Actions
   setUser: (user: User | null) => void;
@@ -41,7 +44,7 @@ const useUserStore = create<UserState>()(
       isAuthenticated: false,
       balance: 0,
       prescriptions: [],
-
+      bill: null,
       setUser: (user) => set({ user, isAuthenticated: !!user }),
       setLoading: (loading) => set({ isLoading: loading }),
       setError: (error) => set({ error }),
@@ -142,7 +145,33 @@ const useUserStore = create<UserState>()(
         }
       },
       
-      scanRFIDCard: async (rfidData) => {
+      getViewBill: async (rfid: string) => {
+        try {
+          set({ isLoading: true, error: null });
+          
+          const billData = await apiService.getViewBill(rfid);
+          
+          set({
+            bill: billData,
+            isLoading: false,
+          });
+          
+          return billData;
+        } catch (error: any) {
+          set({
+            error: error.response?.data?.message || 'Failed to fetch bill',
+            isLoading: false,
+            bill: null,
+          });
+          throw error;
+        }
+      },
+
+
+
+
+
+      scanRFIDCard: async (rfidData: string) => {
         try {
           set({ isLoading: true, error: null });
           

@@ -79,6 +79,16 @@ class ApiService {
     }
   }
 
+ // services/service.ts
+public async getViewBill(rfid: string) {
+  try {
+    const response = await this.axiosInstance.get(`/bills/users/${rfid}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 
   public async scanRFID(rfidData: string) {
     try {

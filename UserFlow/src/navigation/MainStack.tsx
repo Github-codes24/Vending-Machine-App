@@ -7,8 +7,9 @@ import SelectPrescription from '../screen/selectPrescription';
 import BillAccount from '../screen/billAccount';
 import MedicineDispatched from '../screen/medicineDispatched';
 import CollectMedicine from '../screen/collectMedicine';
-import Bill from '../screen/bill';
 import SelectRelationship from '../screen/selectRelationship';
+import ViewBill from '../screen/viewBill';
+import Bill from '../component/bill';
 
 const Stack = createNativeStackNavigator();
 
@@ -57,7 +58,7 @@ const MainStack = () => {
       />
       <Stack.Screen
         name="Bill"
-        component={Bill}
+        component={ViewBill}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -1,9 +1,11 @@
+// BillAccount.tsx
 import {
   View,
   Text,
   ImageBackground,
   StyleSheet,
   Dimensions,
+  Alert,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import {
@@ -18,21 +20,37 @@ import CustomButton from '../../component/button';
 import Header from '../../component/header';
 import CancelButton from '../../component/button/cancelButton';
 import CommonPopup from '../../component/commonPopup';
+import useUserStore from '../../store/userStore';
 
-const BillAccount: React.FC<any> = ({ navigation }) => {
+const BillAccount: React.FC<any> = ({ navigation, route }) => {
   const [isLandscape, setIsLandscape] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
   const [insufficientBalancePopup, setInsufficientBalancePopup] =
     useState(false);
 
-  // These should come from your API or props
-  const currentBalance = 15000; // Example: 15000 or change to 3000 to test insufficient balance
-  const billingAmount = 5000;
+  // Get data from navigation params
+  const { prescriptionId, prescriptionData, relationship } = route.params || {};
+
+  // Get user balance from store
+  const { balance, user, getUserBalance } = useUserStore();
+
+  // Calculate billing amount from prescription medicines
+  const medicines = prescriptionData?.medicines || [];
+  const billingAmount = medicines.reduce((sum: number, medicine: any) => {
+    return sum + (medicine.cost || 0);
+  }, 0);
+
+  useEffect(() => {
+    // Fetch current balance when component mounts
+    if (user?.rfid) {
+      getUserBalance(user.rfid);
+    }
+  }, [user]);
 
   // Show popup when continue is clicked
   const handleContinueClick = () => {
     // Check if balance is sufficient
-    if (currentBalance < billingAmount) {
+    if (balance < billingAmount) {
       setInsufficientBalancePopup(true);
     } else {
       setPopupVisible(true);
@@ -42,7 +60,15 @@ const BillAccount: React.FC<any> = ({ navigation }) => {
   // Handle popup confirmation (YES)
   const handleConfirmTransaction = () => {
     setPopupVisible(false);
-    navigation.navigate('MedicineDispatched');
+
+    // Navigate to MedicineDispatched with billing data
+    navigation.navigate('MedicineDispatched', {
+      prescriptionId,
+      prescriptionData,
+      relationship,
+      billingAmount,
+      transactionSuccess: true,
+    });
   };
 
   // Handle popup cancel (NO)
@@ -53,12 +79,10 @@ const BillAccount: React.FC<any> = ({ navigation }) => {
   // Handle insufficient balance popup buttons
   const handleInsufficientBalanceNo = () => {
     setInsufficientBalancePopup(false);
-    // Stay on current screen
   };
 
   const handleInsufficientBalanceYes = () => {
     setInsufficientBalancePopup(false);
-    // Navigate back or to recharge screen
     navigation.goBack();
   };
 
@@ -100,7 +124,7 @@ const BillAccount: React.FC<any> = ({ navigation }) => {
             <Text style={styles.balanceText}>
               Current Balance:{' '}
               <Text style={styles.amountText}>
-                Rs. {currentBalance.toLocaleString()}
+                Rs. {balance ? balance.toLocaleString() : '0'}
               </Text>
             </Text>
             <Text style={styles.billingText}>
@@ -109,6 +133,16 @@ const BillAccount: React.FC<any> = ({ navigation }) => {
                 Rs. {billingAmount.toLocaleString()}
               </Text>
             </Text>
+
+            {/* Optional: Show remaining balance after transaction */}
+            {balance >= billingAmount && (
+              <Text style={styles.remainingBalanceText}>
+                Remaining Balance:{' '}
+                <Text style={styles.amountText}>
+                  Rs. {(balance - billingAmount).toLocaleString()}
+                </Text>
+              </Text>
+            )}
           </View>
         </View>
 
@@ -214,6 +248,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     color: DARK_GREEN,
+  },
+  remainingBalanceText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#333',
+    marginTop: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
