@@ -10,7 +10,10 @@ const Bill = ({ data }: BillProps) => {
   const { balance } = useUserStore();
   const user = data?.user;
   const medicines = data?.prescription?.medicines ?? [];
-  const total = medicines?.reduce((sum: number, m: any) => sum + m.cost, 0);
+  const total = medicines?.reduce(
+    (sum: number, m: any) => sum + m.cost * m.quantity,
+    0,
+  );
 
   return (
     <View style={styles.card}>

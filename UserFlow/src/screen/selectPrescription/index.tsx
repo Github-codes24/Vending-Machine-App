@@ -104,6 +104,7 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
       const prescription = await apiService.getUserPrescriptionDetails(
         encodeURIComponent(prescriptionId),
       );
+      console.log('Selected prescription:', prescription);
       setSelectedPrescription(prescription);
     } catch (error) {
       console.log('error', error);

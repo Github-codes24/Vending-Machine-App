@@ -81,6 +81,9 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
 
     if (currentBalance < billingAmount) {
       setInsufficientBalancePopup(true);
+    } else if (prescriptionData?.prescription?.collected === true) {
+      // Alert.alert('Alert', 'This prescription has already been collected.');
+      setPopupVisible(true);
     } else {
       setPopupVisible(true);
     }

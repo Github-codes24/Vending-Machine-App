@@ -18,14 +18,16 @@ import {
 } from '../../constants';
 import useUserStore from '../../store/userStore';
 import apiService from '../../services/service';
+import Bill from '../../component/bill';
 
 const ViewBill: React.FC<any> = ({ navigation, route }) => {
-  const { user, isLoading } = useUserStore();
+  const { user, isLoading, balance, getUserBalance } = useUserStore();
   const [billData, setBillData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchBillData();
+    getUserBalance(user?.rfid || route.params?.rfid);
   }, []);
 
   const fetchBillData = async () => {
@@ -90,11 +92,6 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
           billData?.billingDate || billData?.createdAt,
         ).toLocaleDateString()
       : new Date().toLocaleDateString();
-  const availableBalance =
-    billData?.availableBalance ||
-    billData?.balance ||
-    billData?.remainingBalance ||
-    0;
   const total = billData?.total || 0;
   // Add this before the return statement to calculate the total
   const calculateTotal = () => {
@@ -247,7 +244,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
               Available Account Balance
             </Text>
             <Text style={[styles.value, { marginLeft: 15 }]}>
-              Rs. {availableBalance.toLocaleString()}
+              Rs. {balance.toLocaleString()}
             </Text>
           </View>
         </View>
