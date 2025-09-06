@@ -79,10 +79,9 @@ class ApiService {
     }
   }
 
- // services/service.ts
-public async getViewBill(rfid: string) {
+public async getViewBill(billNumber: string) {
   try {
-    const response = await this.axiosInstance.get(`/bills/users/${rfid}`);
+    const response = await this.axiosInstance.get(`bills/BILL-1756809463730`);
     return response.data;
   } catch (error) {
     throw error;

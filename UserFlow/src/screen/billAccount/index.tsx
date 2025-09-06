@@ -1,4 +1,4 @@
-// BillAccount.tsx
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -7,14 +7,12 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
 import {
   BACKGROUNDCOLOR,
   Images,
   PRIMARY_COLOR,
   Strings,
   DARK_GREEN,
-  RED,
 } from '../../constants';
 import CustomButton from '../../component/button';
 import Header from '../../component/header';
@@ -36,21 +34,46 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
 
   // Calculate billing amount from prescription medicines
   const medicines = prescriptionData?.medicines || [];
-  const billingAmount = medicines.reduce((sum: number, medicine: any) => {
-    return sum + (medicine.cost || 0);
-  }, 0);
+  const billingAmount = useMemo(() => {
+    return medicines.reduce((sum: number, medicine: any) => {
+      const cost = parseFloat(medicine?.cost) || 0;
+      const quantity = parseInt(medicine?.quantity) || 1;
+      const unitPrice = parseFloat(medicine?.unitPrice) || cost;
+
+      // If cost is total cost, use it; otherwise calculate from unit price * quantity
+      const totalCost = medicine?.totalCost
+        ? parseFloat(medicine.totalCost)
+        : cost > 0
+        ? cost
+        : unitPrice * quantity;
+
+      return sum + totalCost;
+    }, 0);
+  }, [medicines]);
 
   useEffect(() => {
     // Fetch current balance when component mounts
     if (user?.rfid) {
-      getUserBalance(user.rfid);
+      getUserBalance(user.rfid).catch(error => {
+        console.error('Error fetching balance:', error);
+      });
     }
-  }, [user]);
+  }, [user?.rfid]);
+
+  const formatAmount = (amount: number | undefined): string => {
+    const value = amount || 0;
+    return value.toLocaleString('en-IN', {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 0,
+    });
+  };
 
   // Show popup when continue is clicked
   const handleContinueClick = () => {
     // Check if balance is sufficient
-    if (balance < billingAmount) {
+    const currentBalance = balance || 0;
+
+    if (currentBalance < billingAmount) {
       setInsufficientBalancePopup(true);
     } else {
       setPopupVisible(true);
@@ -96,10 +119,18 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
       setIsLandscape(width > height);
     };
 
+    // Initial check
     updateLayout();
+
+    // Add event listener
     const subscription = Dimensions.addEventListener('change', updateLayout);
 
-    return () => subscription?.remove();
+    // Cleanup
+    return () => {
+      if (subscription && typeof subscription.remove === 'function') {
+        subscription.remove();
+      }
+    };
   }, []);
 
   return (
@@ -118,32 +149,43 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
         )}
 
         <View style={[styles.content, isLandscape && styles.contentLandscape]}>
-          <View
-            style={[styles.balanceContainer, isLandscape && styles.centerAlign]}
-          >
-            <Text style={styles.balanceText}>
-              Current Balance:{' '}
-              <Text style={styles.amountText}>
-                Rs. {balance ? balance.toLocaleString() : '0'}
-              </Text>
-            </Text>
-            <Text style={styles.billingText}>
-              Billing Amount:{' '}
-              <Text style={styles.billingAmountText}>
-                Rs. {billingAmount.toLocaleString()}
-              </Text>
-            </Text>
-
-            {/* Optional: Show remaining balance after transaction */}
-            {balance >= billingAmount && (
-              <Text style={styles.remainingBalanceText}>
-                Remaining Balance:{' '}
+          {/* Portrait: align like the screenshot (labels left, amounts right) */}
+          {!isLandscape && (
+            <View style={styles.balanceBox}>
+              <View style={styles.balanceRow}>
+                <Text style={styles.balanceText}>Current Balance:</Text>
                 <Text style={styles.amountText}>
-                  Rs. {(balance - billingAmount).toLocaleString()}
+                  Rs. {formatAmount(balance)}
                 </Text>
-              </Text>
-            )}
-          </View>
+              </View>
+
+              <View style={styles.balanceRow}>
+                <Text style={styles.billingText}>Billing Amount:</Text>
+                <Text style={styles.billingAmountText}>
+                  Rs. {formatAmount(billingAmount)}
+                </Text>
+              </View>
+            </View>
+          )}
+
+          {/* Landscape: keep centered layout if preferred */}
+          {isLandscape && (
+            <View style={styles.balanceBoxLandscape}>
+              <View style={styles.balanceRowLandscape}>
+                <Text style={styles.balanceText}>Current Balance:</Text>
+                <Text style={styles.amountText}>
+                  Rs. {formatAmount(balance)}
+                </Text>
+              </View>
+
+              <View style={styles.balanceRowLandscape}>
+                <Text style={styles.billingText}>Billing Amount:</Text>
+                <Text style={styles.billingAmountText}>
+                  Rs. {formatAmount(billingAmount)}
+                </Text>
+              </View>
+            </View>
+          )}
         </View>
 
         <View style={styles.buttonContainer}>
@@ -223,38 +265,52 @@ const styles = StyleSheet.create({
   contentLandscape: {
     alignItems: 'center',
   },
-  balanceContainer: {
+
+  // Portrait box matching screenshot layout
+  balanceBox: {
+    width: '100%',
+    gap: 16,
+  },
+  balanceRow: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  // Landscape variant (centered, optional narrower width)
+  balanceBoxLandscape: {
+    width: '70%',
+    maxWidth: 500,
     gap: 12,
   },
-  centerAlign: {
+  balanceRowLandscape: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
+
   balanceText: {
     fontSize: 20,
-    fontWeight: '500',
-    color: '#333',
+    fontWeight: '600',
+    color: DARK_GREEN,
   },
   amountText: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: DARK_GREEN,
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#19776B',
   },
   billingText: {
     fontSize: 20,
-    fontWeight: '500',
-    color: '#333',
-  },
-  billingAmountText: {
-    fontSize: 20,
-    fontWeight: '700',
+    fontWeight: '600',
     color: DARK_GREEN,
   },
-  remainingBalanceText: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#333',
-    marginTop: 10,
+  billingAmountText: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#19776B',
   },
+
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

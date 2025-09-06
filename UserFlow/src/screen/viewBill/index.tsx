@@ -1,3 +1,4 @@
+// ViewBill.tsx
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -20,8 +21,9 @@ import useUserStore from '../../store/userStore';
 import apiService from '../../services/service';
 
 const ViewBill: React.FC<any> = ({ navigation, route }) => {
-  const { user, bill, isLoading, error } = useUserStore();
+  const { user, isLoading } = useUserStore();
   const [billData, setBillData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchBillData();
@@ -29,23 +31,43 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
 
   const fetchBillData = async () => {
     try {
-      // Use RFID from user or route params
-      const rfid = user?.rfid || route.params?.rfid;
+      setLoading(true);
 
-      if (!rfid) {
+      // Use RFID from user or route params
+      const userRfid = user?.rfid || route.params?.rfid;
+
+      if (!userRfid) {
         Alert.alert('Error', 'No RFID found');
+        setLoading(false);
         return;
       }
 
-      const data = await apiService.getViewBill(rfid);
-      setBillData(data);
-    } catch (error) {
+      console.log('Fetching bills for RFID:', userRfid);
+
+      // Call the store method which uses /bills/users/{rfid}
+      const data = await apiService.getViewBill(userRfid);
+      console.log('Bills data received:', data);
+
+      // If the API returns an array of bills, get the latest one
+      // Otherwise use the data as is
+      const billToDisplay = Array.isArray(data)
+        ? data[data.length - 1] // Get the most recent bill
+        : data;
+
+      setBillData(billToDisplay);
+    } catch (error: any) {
       console.error('Error fetching bill:', error);
-      Alert.alert('Error', 'Failed to fetch bill details');
+      console.error('Error response:', error.response);
+      Alert.alert(
+        'Error',
+        error.response?.data?.message || 'Failed to fetch bill details',
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (isLoading) {
+  if (loading || isLoading) {
     return (
       <View style={[styles.container, styles.centerContent]}>
         <ActivityIndicator size="large" color={DARK_GREEN} />
@@ -54,10 +76,10 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
     );
   }
 
-  if (error && !billData) {
+  if (!billData) {
     return (
       <View style={[styles.container, styles.centerContent]}>
-        <Text style={styles.errorText}>{error}</Text>
+        <Text style={styles.errorText}>No bill data found</Text>
         <TouchableOpacity style={styles.retryButton} onPress={fetchBillData}>
           <Text style={styles.retryText}>Retry</Text>
         </TouchableOpacity>
@@ -65,21 +87,22 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
     );
   }
 
-  // Extract data from bill or use defaults
-  const patientInfo = billData?.patient || bill?.patient || {};
-  const medicines = billData?.medicines || bill?.medicines || [];
-  const billNumber = billData?.billNumber || bill?.billNumber || '0001';
+  // Extract data from billData - handle different possible data structures
+  const patientInfo = billData?.patient || billData?.user || {};
+  const medicines =
+    billData?.medicines || billData?.prescription?.medicines || [];
+  const billNumber = billData?.billNumber || billData?.id || 'N/A';
   const billingDate =
-    billData?.billingDate ||
-    bill?.billingDate ||
-    new Date().toLocaleDateString();
+    billData?.billingDate || billData?.createdAt
+      ? new Date(
+          billData?.billingDate || billData?.createdAt,
+        ).toLocaleDateString()
+      : new Date().toLocaleDateString();
   const availableBalance =
-    billData?.availableBalance || bill?.availableBalance || 0;
-
-  const total = medicines.reduce(
-    (sum: number, m: any) => sum + (m.cost || 0),
-    0,
-  );
+    billData?.availableBalance ||
+    billData?.balance ||
+    billData?.remainingBalance ||
+    0;
 
   return (
     <ImageBackground
@@ -123,7 +146,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
               <View style={[styles.rowSpace, { marginTop: 1 }]}>
                 <Text style={styles.value}>{patientInfo.phone || 'N/A'}</Text>
                 <Text style={styles.value}>
-                  {patientInfo.dateOfBirth || 'N/A'}
+                  {patientInfo.dateOfBirth || patientInfo.dob || 'N/A'}
                 </Text>
               </View>
 
@@ -202,7 +225,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
               </Text>
               <Text style={{ flex: 1 }}></Text>
               <Text style={[styles.rowTextBold, { flex: 1 }]}>
-                {total.toFixed(2)}
+                {/* {total.toFixed(2)} */}
               </Text>
             </View>
 
@@ -220,12 +243,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() =>
-          navigation.navigate('MedicineDispatched', {
-            billStatus: true,
-            billData: billData,
-          })
-        }
+        onPress={() => navigation.goBack()}
       >
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>
