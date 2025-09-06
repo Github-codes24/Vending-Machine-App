@@ -95,12 +95,14 @@ const useUserStore = create<UserState>()(
         try {
           set({ isLoading: true, error: null, isAuthenticated: false, user: null });
           const userData = await apiService.getUserProfile(rfid);
+          console.log('User Data:', userData);
           set({
             user: userData,
             isAuthenticated: true,
             isLoading: false,
           });
         } catch (error: any) {
+          console.log('Error fetching profile:', error);
           set({
             error: error.response?.data?.message || 'Failed to fetch profile',
             isLoading: false,

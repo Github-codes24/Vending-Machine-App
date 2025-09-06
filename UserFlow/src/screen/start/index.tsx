@@ -28,6 +28,7 @@ const Start: React.FC<any> = ({ navigation }) => {
   // Simulate RFID scan for testing
   const testRFIDScan = () => {
     const testRFID = 'RFID123456';
+    console.log('Test RFID:', testRFID, 'fetchUserProfile');
     fetchUserProfile(testRFID);
   };
 
