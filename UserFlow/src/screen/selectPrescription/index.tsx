@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import PrescriptionCard from '../../component/prescriptionCard';
 import CustomButton from '../../component/button';
@@ -90,13 +91,18 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
     return () => subscription?.remove();
   }, []);
 
+  // In SelectPrescription.js, check the handleOnPress function
   const handleOnPress = async (index: number) => {
     setSelectedIndex(index);
     setPopupVisible(true);
-    // get the image of the selected prescription
+
     try {
+      // Make sure the ID is clean
+      const prescriptionId = prescriptions[index].id;
+      console.log('Selected prescription ID:', prescriptionId);
+
       const prescription = await apiService.getUserPrescriptionDetails(
-        encodeURIComponent(prescriptions[index].id),
+        encodeURIComponent(prescriptionId),
       );
       setSelectedPrescription(prescription);
     } catch (error) {
@@ -105,7 +111,18 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
   };
 
   const handleContinue = () => {
-    navigation.navigate('SelectRelationship');
+    if (selectedIndex === -1 || !selectedPrescription) {
+      Alert.alert(
+        'Please select a prescription',
+        'You must select a prescription before continuing.',
+      );
+      return;
+    }
+
+    navigation.navigate('SelectRelationship', {
+      prescriptionId: prescriptions[selectedIndex].id,
+      prescriptionData: selectedPrescription,
+    });
   };
 
   return (

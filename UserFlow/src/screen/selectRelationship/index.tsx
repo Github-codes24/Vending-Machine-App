@@ -38,16 +38,13 @@ const SelectRelationship: React.FC<any> = ({ navigation, route }) => {
     return () => subscription?.remove();
   }, []);
 
+  // In SelectRelationship screen
   const handleContinue = () => {
-    if (selected) {
-      navigation.navigate('BillAccount', {
-        prescriptionId: route.params?.prescriptionId,
-        prescriptionData: route.params?.prescriptionData,
-        relationship: selected,
-      });
-    } else {
-      Alert.alert('Please select a relationship');
-    }
+    navigation.navigate('BillAccount', {
+      prescriptionId: route.params?.prescriptionId,
+      prescriptionData: route.params?.prescriptionData,
+      relationship: selected, // whatever relationship was selected
+    });
   };
 
   const handleBack = () => {

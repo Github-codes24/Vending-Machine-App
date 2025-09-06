@@ -25,34 +25,42 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
   const [popupVisible, setPopupVisible] = useState(false);
   const [insufficientBalancePopup, setInsufficientBalancePopup] =
     useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Get data from navigation params
   const { prescriptionId, prescriptionData, relationship } = route.params || {};
 
-  // Get user balance from store
   const { balance, user, getUserBalance } = useUserStore();
 
-  // Calculate billing amount from prescription medicines
-  const medicines = prescriptionData?.medicines || [];
+  // Update the medicines extraction
+  const medicines =
+    prescriptionData?.prescription?.medicines ||
+    prescriptionData?.medicines ||
+    [];
+
+  // Update the billingAmount calculation to handle different data structures
   const billingAmount = useMemo(() => {
     return medicines.reduce((sum: number, medicine: any) => {
-      const cost = parseFloat(medicine?.cost) || 0;
-      const quantity = parseInt(medicine?.quantity) || 1;
-      const unitPrice = parseFloat(medicine?.unitPrice) || cost;
+      // Handle different possible field names
+      const cost = parseFloat(medicine?.cost || medicine?.price || 0);
+      const quantity = parseInt(medicine?.quantity || medicine?.qty || 1);
+      const unitPrice = parseFloat(
+        medicine?.unitPrice || medicine?.unit_price || cost,
+      );
 
-      // If cost is total cost, use it; otherwise calculate from unit price * quantity
-      const totalCost = medicine?.totalCost
-        ? parseFloat(medicine.totalCost)
-        : cost > 0
-        ? cost
-        : unitPrice * quantity;
+      // Calculate total cost
+      const totalCost =
+        medicine?.totalCost || medicine?.total_cost
+          ? parseFloat(medicine.totalCost || medicine.total_cost)
+          : unitPrice * quantity;
 
       return sum + totalCost;
     }, 0);
   }, [medicines]);
-
+  console.log('Billing Amount:', billingAmount);
+  console.log('Medicines:', medicines);
+  console.log('Prescription Data:', prescriptionData);
+  // console.log('totalCost:', total);
   useEffect(() => {
-    // Fetch current balance when component mounts
     if (user?.rfid) {
       getUserBalance(user.rfid).catch(error => {
         console.error('Error fetching balance:', error);
@@ -68,9 +76,7 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
     });
   };
 
-  // Show popup when continue is clicked
   const handleContinueClick = () => {
-    // Check if balance is sufficient
     const currentBalance = balance || 0;
 
     if (currentBalance < billingAmount) {
@@ -80,26 +86,9 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
     }
   };
 
-  // Handle popup confirmation (YES)
-  const handleConfirmTransaction = () => {
-    setPopupVisible(false);
-
-    // Navigate to MedicineDispatched with billing data
-    navigation.navigate('MedicineDispatched', {
-      prescriptionId,
-      prescriptionData,
-      relationship,
-      billingAmount,
-      transactionSuccess: true,
-    });
-  };
-
-  // Handle popup cancel (NO)
   const handleCancelTransaction = () => {
     setPopupVisible(false);
   };
-
-  // Handle insufficient balance popup buttons
   const handleInsufficientBalanceNo = () => {
     setInsufficientBalancePopup(false);
   };
@@ -113,19 +102,142 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
     navigation.goBack();
   };
 
+  const handleConfirmTransaction = async () => {
+    setPopupVisible(false);
+
+    if (!prescriptionId) {
+      Alert.alert('Error', 'No prescription ID found');
+      return;
+    }
+
+    if (!user?.rfid) {
+      Alert.alert('Error', 'User RFID not found. Please login again.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Fix the URL encoding - check if # is already encoded
+      let encodedPrescriptionId = prescriptionId;
+      if (prescriptionId.startsWith('#')) {
+        encodedPrescriptionId = '%23' + prescriptionId.substring(1);
+      } else if (!prescriptionId.startsWith('%23')) {
+        encodedPrescriptionId = '%23' + prescriptionId;
+      }
+
+      const apiUrl = `https://vending-machine-backend-xjfo.onrender.com/api/prescriptions/${encodedPrescriptionId}/collect`;
+
+      console.log('Making API request to:', apiUrl);
+      console.log('Prescription ID:', prescriptionId);
+      console.log('User RFID:', user?.rfid);
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          rfid: user.rfid,
+          billingAmount: billingAmount,
+        }),
+      });
+
+      console.log('Response status:', response.status);
+
+      const responseText = await response.text();
+      console.log('Response text:', responseText);
+
+      // Check if it's an "already collected" error
+      let isAlreadyCollected = false;
+      let errorMessage = '';
+
+      if (!response.ok) {
+        try {
+          const errorData = JSON.parse(responseText);
+          errorMessage =
+            errorData.message ||
+            errorData.error ||
+            `HTTP error! status: ${response.status}`;
+        } catch (e) {
+          errorMessage =
+            responseText || `HTTP error! status: ${response.status}`;
+        }
+
+        // Check if prescription was already collected
+        if (errorMessage.toLowerCase().includes('already collected')) {
+          isAlreadyCollected = true;
+          console.log('Prescription already collected, proceeding anyway...');
+        } else {
+          // For other errors, throw to catch block
+          throw new Error(errorMessage);
+        }
+      }
+
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (e) {
+        data = { message: responseText };
+      }
+
+      // Update user balance after successful transaction (or if already collected)
+      if (user?.rfid) {
+        getUserBalance(user.rfid).catch((error: unknown) => {
+          console.error('Error updating balance:', error);
+        });
+      }
+
+      // Navigate regardless of whether it's new collection or already collected
+      navigation.navigate('MedicineDispatched', {
+        prescriptionId,
+        prescriptionData,
+        relationship,
+        billingAmount,
+        transactionSuccess: true,
+        collectionData: data,
+        isAlreadyCollected, // Pass this flag to next screen
+      });
+    } catch (error: unknown) {
+      // Handle only real errors (not "already collected")
+      console.error('Error collecting prescription:', error);
+
+      let errorMessage =
+        'Unable to process your prescription. Please try again.';
+
+      // Type guard to check if error is an Error object
+      if (error instanceof Error) {
+        console.error('Error details:', error.message);
+
+        // More user-friendly error messages
+        if (error.message.toLowerCase().includes('network')) {
+          errorMessage =
+            'Network error. Please check your connection and try again.';
+        } else if (error.message.toLowerCase().includes('insufficient')) {
+          errorMessage = 'Insufficient balance to complete this transaction.';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+
+      Alert.alert('Transaction Failed', errorMessage, [{ text: 'OK' }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     const updateLayout = () => {
       const { width, height } = Dimensions.get('window');
       setIsLandscape(width > height);
     };
 
-    // Initial check
     updateLayout();
 
-    // Add event listener
     const subscription = Dimensions.addEventListener('change', updateLayout);
 
-    // Cleanup
     return () => {
       if (subscription && typeof subscription.remove === 'function') {
         subscription.remove();
@@ -149,7 +261,6 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
         )}
 
         <View style={[styles.content, isLandscape && styles.contentLandscape]}>
-          {/* Portrait: align like the screenshot (labels left, amounts right) */}
           {!isLandscape && (
             <View style={styles.balanceBox}>
               <View style={styles.balanceRow}>
@@ -168,7 +279,6 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
             </View>
           )}
 
-          {/* Landscape: keep centered layout if preferred */}
           {isLandscape && (
             <View style={styles.balanceBoxLandscape}>
               <View style={styles.balanceRowLandscape}>
@@ -221,7 +331,6 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
           )}
         </View>
 
-        {/* Confirmation Popup */}
         <CommonPopup
           visible={popupVisible}
           title="Do you want to confirm this transaction?"
@@ -233,7 +342,6 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
           showCancel={true}
         />
 
-        {/* Insufficient Balance Popup */}
         <CommonPopup
           visible={insufficientBalancePopup}
           title="Transaction cancelled due to insufficient balance."
@@ -266,7 +374,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  // Portrait box matching screenshot layout
   balanceBox: {
     width: '100%',
     gap: 16,
@@ -278,7 +385,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
-  // Landscape variant (centered, optional narrower width)
   balanceBoxLandscape: {
     width: '70%',
     maxWidth: 500,

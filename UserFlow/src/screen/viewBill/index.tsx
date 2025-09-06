@@ -1,4 +1,3 @@
-// ViewBill.tsx
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -33,7 +32,6 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
     try {
       setLoading(true);
 
-      // Use RFID from user or route params
       const userRfid = user?.rfid || route.params?.rfid;
 
       if (!userRfid) {
@@ -44,15 +42,10 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
 
       console.log('Fetching bills for RFID:', userRfid);
 
-      // Call the store method which uses /bills/users/{rfid}
       const data = await apiService.getViewBill(userRfid);
       console.log('Bills data received:', data);
 
-      // If the API returns an array of bills, get the latest one
-      // Otherwise use the data as is
-      const billToDisplay = Array.isArray(data)
-        ? data[data.length - 1] // Get the most recent bill
-        : data;
+      const billToDisplay = Array.isArray(data) ? data[data.length - 1] : data;
 
       setBillData(billToDisplay);
     } catch (error: any) {
@@ -87,7 +80,6 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
     );
   }
 
-  // Extract data from billData - handle different possible data structures
   const patientInfo = billData?.patient || billData?.user || {};
   const medicines =
     billData?.medicines || billData?.prescription?.medicines || [];
@@ -103,6 +95,18 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
     billData?.balance ||
     billData?.remainingBalance ||
     0;
+  const total = billData?.total || 0;
+  // Add this before the return statement to calculate the total
+  const calculateTotal = () => {
+    if (!medicines || medicines.length === 0) return 0;
+
+    return medicines.reduce((sum: number, med: any) => {
+      const totalCostPerMedicine = (med.quantity || 0) * (med.costPerUnit || 0);
+      return sum + totalCostPerMedicine;
+    }, 0);
+  };
+
+  const calculatedTotal = calculateTotal();
 
   return (
     <ImageBackground
@@ -180,26 +184,34 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
             </View>
 
             {medicines.length > 0 ? (
-              medicines.map((med: any, index: number) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.tableRow,
-                    {
-                      borderBottomWidth:
-                        index === medicines.length - 1 ? 0 : 0.5,
-                    },
-                  ]}
-                >
-                  <Text style={[styles.rowText, { flex: 2 }]}>{med.name}</Text>
-                  <Text style={[styles.rowText, { flex: 1 }]}>
-                    {med.quantity}
-                  </Text>
-                  <Text style={[styles.rowText, { flex: 1 }]}>
-                    {med.cost?.toFixed(2) || '0.00'}
-                  </Text>
-                </View>
-              ))
+              medicines.map((med: any, index: number) => {
+                // Calculate total cost for each medicine
+                const totalCostPerMedicine =
+                  (med.quantity || 0) * (med.costPerUnit || 0);
+
+                return (
+                  <View
+                    key={index}
+                    style={[
+                      styles.tableRow,
+                      {
+                        borderBottomWidth:
+                          index === medicines.length - 1 ? 0 : 0.5,
+                      },
+                    ]}
+                  >
+                    <Text style={[styles.rowText, { flex: 2 }]}>
+                      {med.name}
+                    </Text>
+                    <Text style={[styles.rowText, { flex: 1 }]}>
+                      {med.quantity || 0}
+                    </Text>
+                    <Text style={[styles.rowText, { flex: 1 }]}>
+                      {totalCostPerMedicine.toFixed(2)}
+                    </Text>
+                  </View>
+                );
+              })
             ) : (
               <View style={styles.tableRow}>
                 <Text
@@ -225,7 +237,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
               </Text>
               <Text style={{ flex: 1 }}></Text>
               <Text style={[styles.rowTextBold, { flex: 1 }]}>
-                {/* {total.toFixed(2)} */}
+                {calculatedTotal}
               </Text>
             </View>
 

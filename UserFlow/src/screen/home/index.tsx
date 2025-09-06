@@ -59,7 +59,7 @@ const Home: React.FC<any> = ({ navigation }) => {
   }, []);
 
   const handleContinue = () => {
-    navigation.navigate('SelectRelationship', { userId: user?.id });
+    navigation.navigate('SelectPrescription', { userId: user?.id });
   };
 
   const handleBack = () => {
