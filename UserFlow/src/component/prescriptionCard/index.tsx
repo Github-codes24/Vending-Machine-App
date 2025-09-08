@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Pressable, ImageSourcePropType } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  ImageSourcePropType,
+} from 'react-native';
 import { DARK_GREEN, Images, PERSIAN_GREEN, WHITE } from '../../constants';
 
 interface Props {
@@ -9,17 +16,23 @@ interface Props {
   image: ImageSourcePropType;
 }
 
-const PrescriptionCard: React.FC<Props> = ({ id, selected, onPress, image }) => {
+const PrescriptionCard: React.FC<Props> = ({
+  id,
+  selected,
+  onPress,
+  image,
+}) => {
   return (
-    <Pressable onPress={onPress} style={[styles.card, selected && styles.selectedCard]}>
+    <Pressable
+      onPress={onPress}
+      style={[styles.card, selected && styles.selectedCard]}
+    >
+      <Image source={image} style={styles.image} resizeMode="contain" />
+      <Text style={[styles.text, { color: selected ? WHITE : DARK_GREEN }]}>
+        {id}
+      </Text>
       <Image
-        source={image}
-        style={styles.image}
-        resizeMode="contain"
-      />
-      <Text style={[styles.text, { color: selected ? WHITE : DARK_GREEN }]}>{id}</Text>
-      <Image
-        source={selected ? Images.ic_chekedIcon : Images.ic_unChecked}
+        source={selected ? Images.ic_checked : Images.ic_unChecked}
         style={styles.radioOuter}
       />
     </Pressable>

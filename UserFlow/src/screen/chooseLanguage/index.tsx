@@ -109,16 +109,17 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingBottom: 20,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    // paddingBottom: 40,
+    paddingTop: 20,
+    gap: 14,
   },
   portraitButton: {
-    flex: 0.45,
-    maxWidth: 240,
+    width: 150,
   },
   landscapeButton: {
-    flex: 0.45,
-    maxWidth: 150,
+    width: 100,
   },
 });
 

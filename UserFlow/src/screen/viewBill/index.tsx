@@ -252,7 +252,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.goBack()}
+        onPress={() => navigation.navigate('Home')}
       >
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>

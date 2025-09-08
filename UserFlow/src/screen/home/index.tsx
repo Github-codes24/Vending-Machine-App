@@ -136,8 +136,6 @@ const Home: React.FC<any> = ({ navigation }) => {
             setSelected(Strings.prescriptionSelection);
           }}
         />
-
-        {user?.email && <Text style={styles.userInfoText}>{user.email}</Text>}
       </View>
 
       <View style={styles.buttonContainer}>
@@ -248,12 +246,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingBottom: 30,
+    paddingBottom: 40,
     paddingTop: 20,
+
+    gap: 14,
   },
   rightButtons: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 14,
   },
   portraitButton: {
     width: 150,

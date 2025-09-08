@@ -3,7 +3,7 @@ export const Images = {
   ic_welcomeScreen: require('../assets/image/welcomeScreen.png'),
   ic_dummyImg: require('../assets/image/dummyImg.png'),
   ic_unChecked: require('../assets/image/unChecked.png'),
-  ic_checkedIcon: require('../assets/image/chekedIcon.png'),
+  ic_checked: require('../assets/image/checked.png'),
   ic_vector: require('../assets/image/vector.png'),
   ic_left: require('../assets/image/left.png'),
   ic_pleaseWait: require('../assets/image/pleaseWait.gif'),

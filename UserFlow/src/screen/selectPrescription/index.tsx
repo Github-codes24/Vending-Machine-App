@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
   View,
+  Text,
   FlatList,
   ImageBackground,
   StyleSheet,
   Dimensions,
   ActivityIndicator,
   Alert,
+  Image,
 } from 'react-native';
 import PrescriptionCard from '../../component/prescriptionCard';
 import CustomButton from '../../component/button';
@@ -23,51 +25,13 @@ import CancelButton from '../../component/button/cancelButton';
 import useUserStore from '../../store/userStore';
 import apiService from '../../services/service';
 
-// const prescriptions = [
-//   {
-//     images: Images.ic_dummyImg,
-//     id: '#0000125',
-//   },
-//   {
-//     images: Images.ic_dummyImg,
-//     id: '#0000125',
-//   },
-//   {
-//     images: Images.ic_dummyImg,
-//     id: '#0000125',
-//   },
-//   {
-//     images: Images.ic_dummyImg,
-//     id: '#0000125',
-//   },
-//   {
-//     images: Images.ic_dummyImg,
-//     id: '#0000125',
-//   },
-//   {
-//     images: Images.ic_dummyImg,
-//     id: '#0000125',
-//   },
-//   {
-//     images: Images.ic_dummyImg,
-//     id: '#0000125',
-//   },
-//   {
-//     images: Images.ic_dummyImg,
-//     id: '#0000125',
-//   },
-// ];
-
 const SelectPrescription: React.FC<any> = ({ navigation }) => {
-  // Move useState inside the component
   const { prescriptions, getUserPrescriptions, user, isLoading } =
     useUserStore();
   const [isLandscape, setIsLandscape] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [selectedPrescription, setSelectedPrescription] = useState<any>(null);
   const [popupVisible, setPopupVisible] = useState(false);
-
-  console.log('prescriptions', prescriptions);
 
   const fetchPrescriptions = () => {
     if (!user?.rfid) return;
@@ -78,7 +42,6 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
     fetchPrescriptions();
   }, [user]);
 
-  // Add useEffect for landscape detection
   useEffect(() => {
     const updateLayout = () => {
       const { width, height } = Dimensions.get('window');
@@ -91,20 +54,15 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
     return () => subscription?.remove();
   }, []);
 
-  // In SelectPrescription.js, check the handleOnPress function
   const handleOnPress = async (index: number) => {
     setSelectedIndex(index);
     setPopupVisible(true);
 
     try {
-      // Make sure the ID is clean
       const prescriptionId = prescriptions[index].id;
-      console.log('Selected prescription ID:', prescriptionId);
-
       const prescription = await apiService.getUserPrescriptionDetails(
         encodeURIComponent(prescriptionId),
       );
-      console.log('Selected prescription:', prescription);
       setSelectedPrescription(prescription);
     } catch (error) {
       console.log('error', error);
@@ -126,6 +84,25 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
     });
   };
 
+  // Enhanced Prescription Card Renderer
+  const renderPrescriptionCard = ({
+    item,
+    index,
+  }: {
+    item: any;
+    index: number;
+  }) => {
+    const isSelected = index === selectedIndex;
+
+    return (
+      <PrescriptionCard
+        id={item.id}
+        image={Images.ic_dummyImg}
+        selected={isSelected}
+        onPress={() => handleOnPress(index)}
+      />
+    );
+  };
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -133,13 +110,21 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
         source={Images.ic_backgroundImage}
         resizeMode="stretch"
       >
-        <Header
-          backImageSource={Images.ic_left}
-          onBack={() => navigation.goBack()}
-          title={Strings.selectPrescription}
-        />
+        {!isLandscape && (
+          <Header
+            backImageSource={Images.ic_left}
+            onBack={() => navigation.goBack()}
+            title={Strings.selectPrescription}
+          />
+        )}
 
-        <View style={styles.content}>
+        <View style={[styles.content, isLandscape && styles.landscapeContent]}>
+          {isLandscape && (
+            <Text style={styles.landscapeTitle}>
+              {Strings.selectPrescription}
+            </Text>
+          )}
+
           {isLoading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color={PRIMARY_COLOR} />
@@ -149,15 +134,11 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
               data={prescriptions}
               keyExtractor={(_, index) => index.toString()}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.listContainer}
-              renderItem={({ item, index }) => (
-                <PrescriptionCard
-                  id={item.id}
-                  image={item.images}
-                  selected={index === selectedIndex}
-                  onPress={() => handleOnPress(index)}
-                />
-              )}
+              contentContainerStyle={[
+                styles.listContainer,
+                isLandscape && styles.landscapeListContainer,
+              ]}
+              renderItem={renderPrescriptionCard}
             />
           )}
         </View>
@@ -166,12 +147,33 @@ const SelectPrescription: React.FC<any> = ({ navigation }) => {
           <CancelButton
             style={isLandscape ? styles.landscapeButton : styles.portraitButton}
           />
-          <CustomButton
-            label={Strings.continue}
-            color={PRIMARY_COLOR}
-            onPress={handleContinue}
-            style={isLandscape ? styles.landscapeButton : styles.portraitButton}
-          />
+
+          {isLandscape && (
+            <View style={styles.rightButtons}>
+              <CustomButton
+                label="Back"
+                color={PRIMARY_COLOR}
+                outlined={true}
+                onPress={() => navigation.goBack()}
+                style={styles.landscapeButton}
+              />
+              <CustomButton
+                label={Strings.continue}
+                color={PRIMARY_COLOR}
+                onPress={handleContinue}
+                style={styles.landscapeButton}
+              />
+            </View>
+          )}
+
+          {!isLandscape && (
+            <CustomButton
+              label={Strings.continue}
+              color={PRIMARY_COLOR}
+              onPress={handleContinue}
+              style={styles.portraitButton}
+            />
+          )}
         </View>
 
         <PrescriptionPopup
@@ -197,31 +199,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 5,
   },
-  listContainer: {
-    paddingBottom: 10,
+  landscapeContent: {
+    paddingTop: 40,
   },
-  title: {
-    fontSize: 22,
+  landscapeTitle: {
+    fontSize: 28,
     fontWeight: '600',
     textAlign: 'center',
     marginBottom: 20,
     color: DARK_GREEN,
   },
+  listContainer: {
+    paddingBottom: 10,
+  },
+  landscapeListContainer: {
+    paddingTop: 10,
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    paddingBottom: 20,
-    gap: 10, // Add gap between buttons
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+    paddingTop: 20,
+    gap: 14,
+  },
+  rightButtons: {
+    flexDirection: 'row',
+    gap: 14,
   },
   portraitButton: {
     width: 150,
-    flex: 1,
   },
   landscapeButton: {
     width: 100,
-    flex: 1,
   },
   loadingContainer: {
     flex: 1,

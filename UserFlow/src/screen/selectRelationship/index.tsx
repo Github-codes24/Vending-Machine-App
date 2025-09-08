@@ -225,18 +225,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 40,
     paddingTop: 20,
+    gap: 14,
   },
   rightButtons: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 14,
   },
   portraitButton: {
     width: 150,
-    maxWidth: 150,
   },
   landscapeButton: {
     width: 100,
-    maxWidth: 240,
   },
 });
 
