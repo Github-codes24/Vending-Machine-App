@@ -1,49 +1,180 @@
-import { View, Text, ImageBackground, Image, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Images, Strings } from '../../constants';
-import { BACKGROUNDCOLOR, DARK_GREEN } from '../../constants';
+import {
+  View,
+  Text,
+  ImageBackground,
+  StyleSheet,
+  Animated,
+  Dimensions,
+} from 'react-native';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { Images, Strings, BACKGROUNDCOLOR, DARK_GREEN } from '../../constants';
 import CommonPopup from '../../component/commonPopup';
 
-const CollectMedicine: React.FC<any> = ({ navigation }) => {
+interface CollectMedicineProps {
+  navigation: {
+    replace: (screen: string, params?: object) => void;
+  };
+}
+
+const { width } = Dimensions.get('window');
+const POPUP_DURATION = 3500;
+
+const CollectMedicine: React.FC<CollectMedicineProps> = ({ navigation }) => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(true);
 
-  useEffect(() => {
-    const hidePopupTimer = setTimeout(() => {
-      setShowSuccessPopup(false);
-    }, 1000);
+  // Animation values
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(50)).current;
+  const scaleAnim = useRef(new Animated.Value(0.9)).current;
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
-    const navigationTimer = setTimeout(() => {
-      // Use replace instead of navigate
+  const handleNavigation = useCallback(() => {
+    // Animate out before navigation
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 2000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 0.9,
+        duration: 2000,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
       navigation.replace('MedicineDispatched', { billStatus: true });
-    }, 1500);
+    });
+  }, [navigation, fadeAnim, scaleAnim]);
 
-    return () => {
-      clearTimeout(hidePopupTimer);
-      clearTimeout(navigationTimer);
-    };
-  }, [navigation]);
+  useEffect(() => {
+    // Entrance animations
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        speed: 12,
+        bounciness: 10,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Continuous subtle rotation for visual interest
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(rotateAnim, {
+          toValue: 1,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotateAnim, {
+          toValue: 0,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+
+    // Auto navigate after duration
+    const timer = setTimeout(() => {
+      setShowSuccessPopup(false);
+      handleNavigation();
+    }, POPUP_DURATION);
+
+    return () => clearTimeout(timer);
+  }, [fadeAnim, slideAnim, scaleAnim, rotateAnim, handleNavigation]);
+
+  const spin = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '5deg'],
+  });
 
   return (
     <ImageBackground
       style={styles.backImageView}
-      imageStyle={styles.backImageView}
       source={Images.ic_backgroundImage}
       resizeMode="stretch"
     >
-      <View style={styles.container}>
-        <Image style={styles.imageStyle} source={Images.ic_whiteImg} />
-        <Text style={styles.title}>{Strings.collectYourMedicine}</Text>
-      </View>
+      <Animated.View
+        style={[
+          styles.container,
+          {
+            opacity: fadeAnim,
+            transform: [
+              { translateY: slideAnim },
+              { scale: scaleAnim },
+              { rotate: spin },
+            ],
+          },
+        ]}
+      >
+        <AnimatedTitle text={Strings.collectYourMedicine} />
+      </Animated.View>
 
       <CommonPopup
         visible={showSuccessPopup}
         title="Transaction Successful"
-        icon={Images.ic_chekedIcon}
-        onClose={() => setShowSuccessPopup(false)}
-        onConfirm={() => setShowSuccessPopup(false)}
+        onClose={handleNavigation}
+        onConfirm={handleNavigation}
         showCancel={false}
+        lottieSource={require('../../assets/animation/Success.json')}
+        lottieStyle={styles.lottieStyle}
       />
     </ImageBackground>
+  );
+};
+
+// Animated Title Component with stagger effect
+const AnimatedTitle: React.FC<{ text: string }> = ({ text }) => {
+  const animatedValues = useRef(
+    text.split('').map(() => new Animated.Value(0)),
+  ).current;
+
+  useEffect(() => {
+    const animations = animatedValues.map((animValue, index) =>
+      Animated.timing(animValue, {
+        toValue: 1,
+        duration: 500,
+        delay: index * 30, // Stagger effect
+        useNativeDriver: true,
+      }),
+    );
+
+    Animated.stagger(50, animations).start();
+  }, [animatedValues]);
+
+  return (
+    <View style={styles.titleContainer}>
+      {text.split('').map((char, index) => (
+        <Animated.Text
+          key={index}
+          style={[
+            styles.title,
+            {
+              opacity: animatedValues[index],
+              transform: [
+                {
+                  translateY: animatedValues[index].interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [20, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
+          {char}
+        </Animated.Text>
+      ))}
+    </View>
   );
 };
 
@@ -57,20 +188,22 @@ const styles = StyleSheet.create({
   backImageView: {
     flex: 1,
     backgroundColor: BACKGROUNDCOLOR,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'center',
   },
   title: {
     fontSize: 24,
     fontWeight: '500',
     textAlign: 'center',
-    marginBottom: 24,
     color: DARK_GREEN,
-    marginTop: 20,
   },
-  imageStyle: {
-    width: 150,
-    height: 150,
-    alignSelf: 'center',
+  lottieStyle: {
+    width: 80,
+    height: 80,
   },
 });
+
 export default CollectMedicine;

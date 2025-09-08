@@ -7,7 +7,9 @@ import {
   Image,
   ImageSourcePropType,
 } from 'react-native';
+import LottieView from 'lottie-react-native';
 import { DARK_GREEN, PRIMARY_COLOR, WHITE } from '../../constants';
+
 interface CommonPopupProps {
   visible: boolean;
   onClose: () => void;
@@ -18,8 +20,10 @@ interface CommonPopupProps {
   cancelText?: string;
   showCancel?: boolean;
   showOk?: boolean;
-  ammount?: string,
-  okText?: string,
+  ammount?: string;
+  okText?: string;
+  lottieSource?: any; // Add this prop for Lottie animation
+  lottieStyle?: object; // Add this prop for custom Lottie styling
 }
 
 const CommonPopup: React.FC<CommonPopupProps> = ({
@@ -33,7 +37,9 @@ const CommonPopup: React.FC<CommonPopupProps> = ({
   cancelText = 'NO',
   showCancel = true,
   showOk,
-  okText = 'OK'
+  okText = 'OK',
+  lottieSource,
+  lottieStyle = { width: 100, height: 100 }, // Default Lottie style
 }) => {
   return (
     <Modal
@@ -44,11 +50,22 @@ const CommonPopup: React.FC<CommonPopupProps> = ({
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
-          {icon && <Image source={icon} style={styles.icon} />}
+          {/* Show Lottie animation if provided, otherwise show icon */}
+          {lottieSource ? (
+            <LottieView
+              source={lottieSource}
+              autoPlay
+              loop={false}
+              style={[styles.lottie, lottieStyle]}
+            />
+          ) : (
+            icon && <Image source={icon} style={styles.icon} />
+          )}
+
           <Text style={styles.title}>{title}</Text>
-          {ammount &&
-            <Text style={styles.ammountTxt}>{ammount}</Text>
-          }
+
+          {ammount && <Text style={styles.ammountTxt}>{ammount}</Text>}
+
           {showCancel && (
             <View style={styles.buttons}>
               <Pressable onPress={onClose} style={styles.cancelButton}>
@@ -59,6 +76,7 @@ const CommonPopup: React.FC<CommonPopupProps> = ({
               </Pressable>
             </View>
           )}
+
           {showOk && (
             <Pressable onPress={onClose} style={styles.OkButton}>
               <Text style={styles.cancelText}>{okText}</Text>
@@ -92,6 +110,9 @@ const styles = StyleSheet.create({
     height: 40,
     marginBottom: 10,
     resizeMode: 'contain',
+  },
+  lottie: {
+    marginBottom: 10,
   },
   title: {
     fontSize: 16,
@@ -131,7 +152,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 8,
     marginTop: 20,
-    width : '60%',
+    width: '60%',
   },
   cancelText: {
     color: PRIMARY_COLOR,
