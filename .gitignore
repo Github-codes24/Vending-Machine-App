@@ -76,3 +76,7 @@ yarn-error.log
 UserFlow/vendor/bundle/
 UserFlow/**/Pods/
 **/.env
+
+Owner/ios/
+Owner/android
+Owner/node_modules
