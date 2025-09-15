@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { ActivityIndicator, View, StyleSheet, ViewStyle } from 'react-native';
 import CustomButton from '../button/index';
 import CommonPopup from '../../component/commonPopup';
-import { RED, Strings, Images } from '../../constants';
+import { RED, Images } from '../../constants';
+import Strings from '../../constants/Strings';
 import { useLogout } from '../../utils/useLogout';
 
 interface CancelButtonProps {
@@ -20,8 +21,8 @@ const CancelButton: React.FC<CancelButtonProps> = ({
   style,
   label = Strings.cancel,
   popupTitle = Strings.areYouSureWantToCancelTheProcess,
-  confirmText = 'YES',
-  cancelText = 'NO',
+  confirmText = Strings.yes,
+  cancelText = Strings.no,
   onBeforeLogout,
   outlined = false,
 }) => {

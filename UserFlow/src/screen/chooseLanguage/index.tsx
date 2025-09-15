@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Images,
   PRIMARY_COLOR,
-  RED,
-  Strings,
   BACKGROUNDCOLOR,
   DARK_GREEN,
 } from '../../constants';
@@ -12,9 +10,18 @@ import LargeButton from '../../component/largeButton';
 import CustomButton from '../../component/button';
 import { StyleSheet } from 'react-native';
 import CancelButton from '../../component/button/cancelButton';
+import useLanguageStore from '../../store/languageStore';
+import Strings from '../../constants/Strings';
 
 const ChooseLanguage: React.FC<any> = ({ navigation }) => {
-  const [selected, setSelected] = useState<string | null>('English');
+  const { currentLanguage, changeLanguage } = useLanguageStore();
+  const [selected, setSelected] = useState<string>(
+    currentLanguage === 'hi'
+      ? 'Hindi'
+      : currentLanguage === 'mr'
+      ? 'Marathi'
+      : 'English',
+  );
   const [isLandscape, setIsLandscape] = useState(false);
 
   // Detect orientation changes
@@ -30,9 +37,18 @@ const ChooseLanguage: React.FC<any> = ({ navigation }) => {
     return () => subscription?.remove();
   }, []);
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (selected) {
       console.log('Selected Language:', selected);
+
+      // Map selection to language code and update
+      const languageMap: { [key: string]: string } = {
+        English: 'en',
+        Hindi: 'hi',
+        Marathi: 'mr',
+      };
+
+      await changeLanguage(languageMap[selected]);
       navigation.navigate('Home');
     } else {
       Alert.alert('Please select a language');

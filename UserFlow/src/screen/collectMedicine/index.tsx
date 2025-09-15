@@ -9,14 +9,12 @@ import {
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   Images,
-  Strings,
   BACKGROUNDCOLOR,
   DARK_GREEN,
   PRIMARY_COLOR,
 } from '../../constants';
 import CommonPopup from '../../component/commonPopup';
-import LottieView from 'lottie-react-native';
-
+import Strings from '../../constants/Strings';
 interface CollectMedicineProps {
   navigation: {
     replace: (screen: string, params?: object) => void;
@@ -235,10 +233,10 @@ const CollectMedicine: React.FC<CollectMedicineProps> = ({ navigation }) => {
           ]}
         >
           <Text style={styles.instructionText}>
-            Your medicine is ready for collection
+            {Strings.yourMedicineIsReadyForCollection}
           </Text>
           <Text style={styles.subInstructionText}>
-            Please proceed to the counter
+            {Strings.pleaseProceedToTheCounter}
           </Text>
         </Animated.View>
 
@@ -248,7 +246,7 @@ const CollectMedicine: React.FC<CollectMedicineProps> = ({ navigation }) => {
 
       <CommonPopup
         visible={showSuccessPopup}
-        title="Transaction Successful"
+        title={Strings.transactionSuccessful}
         onClose={handleNavigation}
         onConfirm={handleNavigation}
         showCancel={false}

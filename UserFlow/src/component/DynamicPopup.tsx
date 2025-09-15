@@ -15,6 +15,7 @@ import {
   Images,
   BACKGROUNDCOLOR,
 } from '../constants';
+import Strings from '../constants/Strings';
 const { width, height } = Dimensions.get('screen');
 
 interface DynamicPopupProps {
@@ -51,13 +52,15 @@ const DynamicPopup: React.FC<DynamicPopupProps> = ({
             <View style={styles.popupContainer}>
               {type === 'cancel' && (
                 <Text style={styles.title}>
-                  Are you sure you want to cancel?
+                  {Strings.areYouSureWantToCancelTheProcess}
                 </Text>
               )}
 
               {type === 'balance' && (
                 <>
-                  <Text style={styles.title}>Your Account Balance is</Text>
+                  <Text style={styles.title}>
+                    {Strings.yourAccountBalanceIs}
+                  </Text>
                   <Text style={styles.balanceText}>{balanceAmount}</Text>
                 </>
               )}
@@ -70,13 +73,13 @@ const DynamicPopup: React.FC<DynamicPopupProps> = ({
               {type === 'cancel' && (
                 <>
                   <CustomButton
-                    label="Cancel"
+                    label={Strings.cancel}
                     color={RED}
                     onPress={onClose}
                     style={styles.button}
                   />
                   <CustomButton
-                    label="Yes, Exit"
+                    label={Strings.yes}
                     color={PRIMARY_COLOR}
                     outlined
                     onPress={onConfirm}
@@ -88,13 +91,13 @@ const DynamicPopup: React.FC<DynamicPopupProps> = ({
               {type === 'balance' && (
                 <>
                   <CustomButton
-                    label="Cancel"
+                    label={Strings.cancel}
                     color={RED}
                     onPress={onConfirm}
                     style={styles.button}
                   />
                   <CustomButton
-                    label="Back"
+                    label={Strings.back}
                     color={PRIMARY_COLOR}
                     outlined
                     onPress={onClose}

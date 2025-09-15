@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { Images, PRIMARY_COLOR, RED, Strings } from '../../constants';
+import { Images, PRIMARY_COLOR, RED } from '../../constants';
 import LargeButton from '../../component/largeButton';
 import CustomButton from '../../component/button';
 import Header from '../../component/header';
@@ -16,7 +16,7 @@ import { StyleSheet } from 'react-native';
 import { BACKGROUNDCOLOR } from '../../constants';
 import useUserStore from '../../store/userStore';
 import CancelButton from '../../component/button/cancelButton';
-import { useNavigation } from '@react-navigation/native';
+import Strings from '../../constants/Strings';
 
 const SelectRelationship: React.FC<any> = ({ navigation, route }) => {
   const [selected, setSelected] = useState<string | null>('Self');
@@ -102,7 +102,7 @@ const SelectRelationship: React.FC<any> = ({ navigation, route }) => {
         )}
 
         <View style={styles.subContainer}>
-          <Text style={styles.title}>{Strings.selectRelationship}</Text>
+          <Text style={styles.title}>{Strings.selectRelationshipOption}</Text>
 
           <ScrollView
             style={styles.scrollView}
@@ -181,8 +181,8 @@ const SelectRelationship: React.FC<any> = ({ navigation, route }) => {
           icon={Images.ic_vector}
           onClose={handlePopupCancel}
           onConfirm={handleConfirmCancel}
-          confirmText="YES"
-          cancelText="NO"
+          confirmText={Strings.yes}
+          cancelText={Strings.no}
           showCancel={true}
         />
       </ImageBackground>

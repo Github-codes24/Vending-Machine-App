@@ -13,11 +13,11 @@ import {
   Images,
   PRIMARY_COLOR,
   RED,
-  Strings,
 } from '../../constants';
 import CustomButton from '../../component/button';
 import useUserStore from '../../store/userStore';
 import LottieView from 'lottie-react-native';
+import Strings from '../../constants/Strings';
 
 const { width, height } = Dimensions.get('window');
 
@@ -192,7 +192,7 @@ const MedicineDispatched: React.FC<MedicineDispatchedProps> = ({
 
         <Text style={styles.title}>{Strings.theMedicineDispatched}</Text>
         <Text style={styles.subtitle}>
-          Please wait while we prepare your medicine...
+          {Strings.pleaseWaitWhileWePrepareYourMedicine}
         </Text>
 
         {/* Progress Bar */}
@@ -236,10 +236,10 @@ const MedicineDispatched: React.FC<MedicineDispatchedProps> = ({
           <Text style={styles.checkmark}>✓</Text>
         </Animated.View>
 
-        <Text style={styles.thankYouTitle}>Thank You</Text>
+        <Text style={styles.thankYouTitle}>{Strings.thankYou}</Text>
         <Text style={styles.userName}>{user?.name || 'Valued Customer'}</Text>
         <Text style={styles.successMessage}>
-          Your medicine has been successfully dispatched!
+          {Strings.yourMedicineHasBeenSuccessfullyDispatched}
         </Text>
       </View>
 

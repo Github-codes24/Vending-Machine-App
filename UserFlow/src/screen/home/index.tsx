@@ -11,7 +11,6 @@ import {
 import useUserStore from '../../store/userStore';
 import {
   Images,
-  Strings,
   RED,
   PRIMARY_COLOR,
   DARK_GREEN,
@@ -22,6 +21,7 @@ import CustomButton from '../../component/button';
 import Header from '../../component/header';
 import DynamicPopup from '../../component/DynamicPopup';
 import CancelButton from '../../component/button/cancelButton';
+import Strings from '../../constants/Strings';
 
 const Home: React.FC<any> = ({ navigation }) => {
   const { user, getUserBalance, isLoading, error, balance } = useUserStore();

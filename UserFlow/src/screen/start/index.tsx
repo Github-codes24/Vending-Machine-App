@@ -7,17 +7,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React, { useEffect } from 'react';
-import { BACKGROUNDCOLOR, DARK_GREEN, Images, Strings } from '../../constants';
+import { BACKGROUNDCOLOR, DARK_GREEN, Images } from '../../constants';
+import Strings from '../../constants/Strings';
 import useUserStore from '../../store/userStore';
 
 const Start: React.FC<any> = ({ navigation }) => {
   const { fetchUserProfile, isLoading, error, user } = useUserStore();
-
-  // Example: Fetch data on component mount
-  useEffect(() => {
-    // You can call fetchUserData() here if needed on mount
-    // fetchUserData();
-  }, []);
 
   useEffect(() => {
     if (user) {
@@ -25,7 +20,6 @@ const Start: React.FC<any> = ({ navigation }) => {
     }
   }, [user]);
 
-  // Simulate RFID scan for testing
   const testRFIDScan = () => {
     const testRFID = 'RFID123456';
     console.log('Test RFID:', testRFID, 'fetchUserProfile');
@@ -53,7 +47,6 @@ const Start: React.FC<any> = ({ navigation }) => {
         <Image style={styles.imageStyle} source={Images.ic_welcomeScreen} />
         <Text style={styles.title}>{Strings.pleaseScanYourRFIDCard}</Text>
 
-        {/* Test button for development - remove in production */}
         <Text style={styles.testButton} onPress={testRFIDScan}>
           Test RFID Scan
         </Text>

@@ -11,7 +11,6 @@ import {
   BACKGROUNDCOLOR,
   Images,
   PRIMARY_COLOR,
-  Strings,
   DARK_GREEN,
 } from '../../constants';
 import CustomButton from '../../component/button';
@@ -19,6 +18,7 @@ import Header from '../../component/header';
 import CancelButton from '../../component/button/cancelButton';
 import CommonPopup from '../../component/commonPopup';
 import useUserStore from '../../store/userStore';
+import Strings from '../../constants/Strings';
 
 const BillAccount: React.FC<any> = ({ navigation, route }) => {
   const [isLandscape, setIsLandscape] = useState(false);
@@ -267,14 +267,14 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
           {!isLandscape && (
             <View style={styles.balanceBox}>
               <View style={styles.balanceRow}>
-                <Text style={styles.balanceText}>Current Balance:</Text>
+                <Text style={styles.balanceText}>{Strings.currentBalance}</Text>
                 <Text style={styles.amountText}>
                   Rs. {formatAmount(balance)}
                 </Text>
               </View>
 
               <View style={styles.balanceRow}>
-                <Text style={styles.billingText}>Billing Amount:</Text>
+                <Text style={styles.billingText}>{Strings.billingAmount}</Text>
                 <Text style={styles.billingAmountText}>
                   Rs. {formatAmount(billingAmount)}
                 </Text>
@@ -285,14 +285,14 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
           {isLandscape && (
             <View style={styles.balanceBoxLandscape}>
               <View style={styles.balanceRowLandscape}>
-                <Text style={styles.balanceText}>Current Balance:</Text>
+                <Text style={styles.balanceText}>{Strings.currentBalance}</Text>
                 <Text style={styles.amountText}>
                   Rs. {formatAmount(balance)}
                 </Text>
               </View>
 
               <View style={styles.balanceRowLandscape}>
-                <Text style={styles.billingText}>Billing Amount:</Text>
+                <Text style={styles.billingText}>{Strings.billingAmount}</Text>
                 <Text style={styles.billingAmountText}>
                   Rs. {formatAmount(billingAmount)}
                 </Text>
@@ -309,7 +309,7 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
           {isLandscape && (
             <View style={styles.rightButtons}>
               <CustomButton
-                label="Back"
+                label={Strings.back}
                 color={PRIMARY_COLOR}
                 outlined={true}
                 onPress={handleBack}
@@ -336,23 +336,23 @@ const BillAccount: React.FC<any> = ({ navigation, route }) => {
 
         <CommonPopup
           visible={popupVisible}
-          title="Do you want to confirm this transaction?"
+          title={Strings.doYouWantToConfirmThisTransaction}
           icon={Images.ic_vector}
           onClose={handleCancelTransaction}
           onConfirm={handleConfirmTransaction}
-          confirmText="Yes"
-          cancelText="No"
+          confirmText={Strings.yes}
+          cancelText={Strings.no}
           showCancel={true}
         />
 
         <CommonPopup
           visible={insufficientBalancePopup}
-          title="Transaction cancelled due to insufficient balance."
+          title={Strings.transactionCancelledDueToInsufficientBalance}
           icon={Images.ic_cross}
           onClose={handleInsufficientBalanceNo}
           onConfirm={handleInsufficientBalanceYes}
-          confirmText="YES"
-          cancelText="NO"
+          confirmText={Strings.yes}
+          cancelText={Strings.no}
           showCancel={true}
         />
       </ImageBackground>

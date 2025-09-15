@@ -17,13 +17,13 @@ import {
   DARK_GREEN,
   Images,
   PRIMARY_COLOR,
-  Strings,
 } from '../../constants';
 import Header from '../../component/header';
 import PrescriptionPopup from '../../component/PrescriptionPopup';
 import CancelButton from '../../component/button/cancelButton';
 import useUserStore from '../../store/userStore';
 import apiService from '../../services/service';
+import Strings from '../../constants/Strings';
 
 const SelectPrescription: React.FC<any> = ({ navigation }) => {
   const { prescriptions, getUserPrescriptions, user, isLoading } =
