@@ -15,8 +15,6 @@ class ApiService {
         'Content-Type': 'application/json',
       },
     });
-
-    // Request interceptor
     this.axiosInstance.interceptors.request.use(
       async (config) => {
         const token = await storage.getItem('authToken');

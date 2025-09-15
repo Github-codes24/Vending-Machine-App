@@ -11,7 +11,7 @@ import CustomButton from '../../component/button';
 import { StyleSheet } from 'react-native';
 import CancelButton from '../../component/button/cancelButton';
 import useLanguageStore from '../../store/languageStore';
-import Strings from '../../constants/Strings';
+import Strings from '../../constants/LanguageStrings';
 
 const ChooseLanguage: React.FC<any> = ({ navigation }) => {
   const { currentLanguage, changeLanguage } = useLanguageStore();

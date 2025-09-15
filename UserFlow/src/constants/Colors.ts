@@ -1,7 +1,3 @@
-/**
- * Decalre all the color codes here for using in throughout the app.
- */
-
 export const BLACK = '#000000';
 export const BLUE = '#0000ff';
 export const LIGHT_GRAY_BORDER = '#EDEDED';

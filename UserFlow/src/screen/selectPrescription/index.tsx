@@ -23,7 +23,7 @@ import PrescriptionPopup from '../../component/PrescriptionPopup';
 import CancelButton from '../../component/button/cancelButton';
 import useUserStore from '../../store/userStore';
 import apiService from '../../services/service';
-import Strings from '../../constants/Strings';
+import Strings from '../../constants/LanguageStrings';
 
 const SelectPrescription: React.FC<any> = ({ navigation }) => {
   const { prescriptions, getUserPrescriptions, user, isLoading } =

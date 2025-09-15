@@ -16,7 +16,7 @@ import { StyleSheet } from 'react-native';
 import { BACKGROUNDCOLOR } from '../../constants';
 import useUserStore from '../../store/userStore';
 import CancelButton from '../../component/button/cancelButton';
-import Strings from '../../constants/Strings';
+import Strings from '../../constants/LanguageStrings';
 
 const SelectRelationship: React.FC<any> = ({ navigation, route }) => {
   const [selected, setSelected] = useState<string | null>('Self');

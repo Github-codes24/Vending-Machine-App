@@ -18,7 +18,7 @@ import Header from '../../component/header';
 import CancelButton from '../../component/button/cancelButton';
 import CommonPopup from '../../component/commonPopup';
 import useUserStore from '../../store/userStore';
-import Strings from '../../constants/Strings';
+import Strings from '../../constants/LanguageStrings';
 
 const BillAccount: React.FC<any> = ({ navigation, route }) => {
   const [isLandscape, setIsLandscape] = useState(false);

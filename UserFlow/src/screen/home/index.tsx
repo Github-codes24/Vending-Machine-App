@@ -21,7 +21,7 @@ import CustomButton from '../../component/button';
 import Header from '../../component/header';
 import DynamicPopup from '../../component/DynamicPopup';
 import CancelButton from '../../component/button/cancelButton';
-import Strings from '../../constants/Strings';
+import Strings from '../../constants/LanguageStrings';
 
 const Home: React.FC<any> = ({ navigation }) => {
   const { user, getUserBalance, isLoading, error, balance } = useUserStore();

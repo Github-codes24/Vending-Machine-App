@@ -18,7 +18,7 @@ import {
 } from '../../constants';
 import useUserStore from '../../store/userStore';
 import apiService from '../../services/service';
-import Bill from '../../component/bill';
+import Strings from '../../constants/LanguageStrings';
 
 const ViewBill: React.FC<any> = ({ navigation, route }) => {
   const { user, isLoading, balance, getUserBalance } = useUserStore();
@@ -76,7 +76,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
       <View style={[styles.container, styles.centerContent]}>
         <Text style={styles.errorText}>No bill data found</Text>
         <TouchableOpacity style={styles.retryButton} onPress={fetchBillData}>
-          <Text style={styles.retryText}>Retry</Text>
+          <Text style={styles.retryText}>{Strings.retry}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -115,8 +115,8 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
         <View style={styles.subContainer}>
           <View style={styles.card}>
             <View style={styles.rowSpace}>
-              <Text style={styles.label}>Bill Number</Text>
-              <Text style={styles.label}>Billing Date</Text>
+              <Text style={styles.label}>{Strings.billNumber}</Text>
+              <Text style={styles.label}>{Strings.billingDate}</Text>
             </View>
 
             <View style={[styles.rowSpace, { marginTop: 2 }]}>
@@ -126,12 +126,14 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
 
             <View style={styles.lineView}></View>
 
-            <Text style={[styles.sectionTitle]}>Patient Information</Text>
+            <Text style={[styles.sectionTitle]}>
+              {Strings.patientInformation}
+            </Text>
 
             <View style={styles.infoGrid}>
               <View style={styles.rowSpace}>
-                <Text style={styles.label}>Name</Text>
-                <Text style={styles.label}>Age</Text>
+                <Text style={styles.label}>{Strings.name}</Text>
+                <Text style={styles.label}>{Strings.age}</Text>
               </View>
               <View style={[styles.rowSpace, { marginTop: 1 }]}>
                 <Text style={styles.value}>
@@ -141,8 +143,8 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
               </View>
 
               <View style={styles.rowSpace}>
-                <Text style={styles.label}>Phone No.</Text>
-                <Text style={styles.label}>Date of Birth</Text>
+                <Text style={styles.label}>{Strings.phoneNo}</Text>
+                <Text style={styles.label}>{Strings.dateOfBirth}</Text>
               </View>
               <View style={[styles.rowSpace, { marginTop: 1 }]}>
                 <Text style={styles.value}>{patientInfo.phone || 'N/A'}</Text>
@@ -152,8 +154,8 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
               </View>
 
               <View style={styles.rowSpace}>
-                <Text style={styles.label}>Email</Text>
-                <Text style={styles.label}>Gender</Text>
+                <Text style={styles.label}>{Strings.email}</Text>
+                <Text style={styles.label}>{Strings.gender}</Text>
               </View>
               <View style={[styles.rowSpace, { marginTop: 1 }]}>
                 <Text style={styles.value}>
@@ -162,7 +164,9 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
                 <Text style={styles.value}>{patientInfo.gender || 'N/A'}</Text>
               </View>
 
-              <Text style={[styles.label, { marginTop: 7 }]}>Address</Text>
+              <Text style={[styles.label, { marginTop: 7 }]}>
+                {Strings.address}
+              </Text>
               <Text style={[styles.value, { flex: 1 }]}>
                 {patientInfo.address || 'N/A'}
               </Text>
@@ -170,14 +174,20 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
 
             <View style={styles.lineView}></View>
 
-            <Text style={styles.sectionTitle}>List of Prescribed Medicine</Text>
+            <Text style={styles.sectionTitle}>
+              {Strings.listOfPrescribedMedicine}
+            </Text>
 
             <View style={styles.tableHeader}>
               <Text style={[styles.tableText, { flex: 2 }]}>
-                Medication Name
+                {Strings.medicationName}
               </Text>
-              <Text style={[styles.tableText, { flex: 1 }]}>Total Item</Text>
-              <Text style={[styles.tableText, { flex: 1 }]}>Total Cost</Text>
+              <Text style={[styles.tableText, { flex: 1 }]}>
+                {Strings.totalItem}
+              </Text>
+              <Text style={[styles.tableText, { flex: 1 }]}>
+                {Strings.totalCost}
+              </Text>
             </View>
 
             {medicines.length > 0 ? (
@@ -214,7 +224,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
                 <Text
                   style={[styles.rowText, { flex: 1, textAlign: 'center' }]}
                 >
-                  No medicines found
+                  {Strings.noMedicinesFound}
                 </Text>
               </View>
             )}
@@ -230,7 +240,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
               <Text
                 style={[styles.rowTextBold, { flex: 2, fontWeight: '700' }]}
               >
-                Total
+                {Strings.total}
               </Text>
               <Text style={{ flex: 1 }}></Text>
               <Text style={[styles.rowTextBold, { flex: 1 }]}>
@@ -241,7 +251,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
             <View style={styles.lineView}></View>
 
             <Text style={[styles.label, { marginLeft: 15 }]}>
-              Available Account Balance
+              {Strings.availableAccountBalance}
             </Text>
             <Text style={[styles.value, { marginLeft: 15 }]}>
               Rs. {balance.toLocaleString()}
@@ -254,7 +264,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
         style={styles.button}
         onPress={() => navigation.navigate('Home')}
       >
-        <Text style={styles.buttonText}>Done</Text>
+        <Text style={styles.buttonText}>{Strings.done}</Text>
       </TouchableOpacity>
     </ImageBackground>
   );

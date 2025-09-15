@@ -14,7 +14,7 @@ import {
   PRIMARY_COLOR,
 } from '../../constants';
 import CommonPopup from '../../component/commonPopup';
-import Strings from '../../constants/Strings';
+import Strings from '../../constants/LanguageStrings';
 interface CollectMedicineProps {
   navigation: {
     replace: (screen: string, params?: object) => void;

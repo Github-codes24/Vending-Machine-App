@@ -4,7 +4,7 @@ import { ActivityIndicator, View, StyleSheet, ViewStyle } from 'react-native';
 import CustomButton from '../button/index';
 import CommonPopup from '../../component/commonPopup';
 import { RED, Images } from '../../constants';
-import Strings from '../../constants/Strings';
+import Strings from '../../constants/LanguageStrings';
 import { useLogout } from '../../utils/useLogout';
 
 interface CancelButtonProps {

@@ -12,6 +12,7 @@ const Strings = new LocalizedStrings({
     done: 'Done',
     thankYou: 'Thank You',
     pleaseWait: 'Please Wait',
+    retry: 'Retry',
     
     // Start Screen
     welcome: 'Welcome',
@@ -59,6 +60,7 @@ const Strings = new LocalizedStrings({
     balanceAndBillingAmount: 'Balance & Billing Amount',
     currentBalance: 'Current Balance:',
     billingAmount: 'Billing Amount:',
+    noMedicinesFound: 'No medicines found',
     
     // Medicine Dispatch
     theMedicineDispatched: 'Please wait, the medicine is being dispatched !',
@@ -104,6 +106,7 @@ const Strings = new LocalizedStrings({
     done: 'पूर्ण',
     thankYou: 'धन्यवाद',
     pleaseWait: 'कृपया प्रतीक्षा करें',
+    retry: 'पुनर्यादी',
     
     // Start Screen
     welcome: 'स्वागत है',
@@ -144,6 +147,7 @@ const Strings = new LocalizedStrings({
     doYouWantToConfirmThisTransaction: 'क्या आप इस लेनदेन की पुष्टि करना चाहते हैं?',
     yourMedicineIsReadyForCollection: 'आपकी दवा संग्रह के लिए तैयार है!',
     pleaseProceedToTheCounter: 'कृपया प्रतीक्षा करा, औषध पाठवले जात आहे !',
+    noMedicinesFound: 'दवा नुस्खा नाही',
     
     
     // Transaction Messages
@@ -196,6 +200,7 @@ const Strings = new LocalizedStrings({
     done: 'पूर्ण',
     thankYou: 'धन्यवाद',
     pleaseWait: 'कृपया प्रतीक्षा करा',
+    retry: 'पुनर्यादी',
 
     
     // Start Screen
@@ -232,6 +237,8 @@ const Strings = new LocalizedStrings({
     // Select Prescription
     selectPrescription: 'पर्ची निवडा',
     prescriptionNo: 'पर्ची नंबर',
+    noMedicinesFound: 'दवा नुस्खा नाही',
+
     
     // Order Confirmation
     doYouWantToConfirmThisTransaction: 'तुम्हाला या व्यवहाराची पुष्टी करायची आहे का?',

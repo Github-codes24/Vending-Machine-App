@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Images, PRIMARY_COLOR, WHITE } from '../../constants';
 import Bill from '../bill';
-import Strings from '../../constants/Strings';
+import Strings from '../../constants/LanguageStrings';
 
 interface CommonPopupProps {
   visible: boolean;

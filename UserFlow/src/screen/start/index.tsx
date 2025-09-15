@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, { useEffect } from 'react';
 import { BACKGROUNDCOLOR, DARK_GREEN, Images } from '../../constants';
-import Strings from '../../constants/Strings';
+import Strings from '../../constants/LanguageStrings';
 import useUserStore from '../../store/userStore';
 
 const Start: React.FC<any> = ({ navigation }) => {

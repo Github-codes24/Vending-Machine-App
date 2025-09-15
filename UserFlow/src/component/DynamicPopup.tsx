@@ -15,7 +15,7 @@ import {
   Images,
   BACKGROUNDCOLOR,
 } from '../constants';
-import Strings from '../constants/Strings';
+import Strings from '../constants/LanguageStrings';
 const { width, height } = Dimensions.get('screen');
 
 interface DynamicPopupProps {

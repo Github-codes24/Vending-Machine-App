@@ -12,7 +12,7 @@ const Routes = () => {
 
   return (
     <NavigationContainer
-      key={currentLanguage}
+      // key={currentLanguage}
       ref={navigatorRef => {
         NavigationService.setTopLevelNavigator(navigatorRef);
       }}

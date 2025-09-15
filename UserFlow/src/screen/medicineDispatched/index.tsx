@@ -17,7 +17,7 @@ import {
 import CustomButton from '../../component/button';
 import useUserStore from '../../store/userStore';
 import LottieView from 'lottie-react-native';
-import Strings from '../../constants/Strings';
+import Strings from '../../constants/LanguageStrings';
 
 const { width, height } = Dimensions.get('window');
 
