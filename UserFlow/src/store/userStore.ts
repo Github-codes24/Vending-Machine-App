@@ -168,11 +168,7 @@ const useUserStore = create<UserState>()(
           throw error;
         }
       },
-
-
-
-
-
+      
       scanRFIDCard: async (rfidData: string) => {
         try {
           set({ isLoading: true, error: null });

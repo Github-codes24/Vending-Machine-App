@@ -104,7 +104,7 @@ const Home: React.FC<any> = ({ navigation }) => {
       {!isLandscape && (
         <Header
           backImageSource={Images.ic_left}
-          onBack={() => navigation.goBack()}
+          onBack={() => navigation.navigate('ChooseLanguage')}
           title=""
         />
       )}

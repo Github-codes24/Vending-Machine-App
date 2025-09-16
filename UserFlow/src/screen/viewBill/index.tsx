@@ -115,8 +115,8 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
         <View style={styles.subContainer}>
           <View style={styles.card}>
             <View style={styles.rowSpace}>
-              <Text style={styles.label}>{Strings.billNumber}</Text>
-              <Text style={styles.label}>{Strings.billingDate}</Text>
+              <Text style={styles.label}>Bill Number</Text>
+              <Text style={styles.label}>Billing Date</Text>
             </View>
 
             <View style={[styles.rowSpace, { marginTop: 2 }]}>
@@ -132,8 +132,8 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
 
             <View style={styles.infoGrid}>
               <View style={styles.rowSpace}>
-                <Text style={styles.label}>{Strings.name}</Text>
-                <Text style={styles.label}>{Strings.age}</Text>
+                <Text style={styles.label}>Name</Text>
+                <Text style={styles.label}>Age</Text>
               </View>
               <View style={[styles.rowSpace, { marginTop: 1 }]}>
                 <Text style={styles.value}>
@@ -143,8 +143,8 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
               </View>
 
               <View style={styles.rowSpace}>
-                <Text style={styles.label}>{Strings.phoneNo}</Text>
-                <Text style={styles.label}>{Strings.dateOfBirth}</Text>
+                <Text style={styles.label}>Phone No</Text>
+                <Text style={styles.label}>Date of Birth</Text>
               </View>
               <View style={[styles.rowSpace, { marginTop: 1 }]}>
                 <Text style={styles.value}>{patientInfo.phone || 'N/A'}</Text>
@@ -154,8 +154,8 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
               </View>
 
               <View style={styles.rowSpace}>
-                <Text style={styles.label}>{Strings.email}</Text>
-                <Text style={styles.label}>{Strings.gender}</Text>
+                <Text style={styles.label}>Email</Text>
+                <Text style={styles.label}>Gender</Text>
               </View>
               <View style={[styles.rowSpace, { marginTop: 1 }]}>
                 <Text style={styles.value}>
@@ -164,9 +164,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
                 <Text style={styles.value}>{patientInfo.gender || 'N/A'}</Text>
               </View>
 
-              <Text style={[styles.label, { marginTop: 7 }]}>
-                {Strings.address}
-              </Text>
+              <Text style={[styles.label, { marginTop: 7 }]}>Address</Text>
               <Text style={[styles.value, { flex: 1 }]}>
                 {patientInfo.address || 'N/A'}
               </Text>
@@ -174,20 +172,14 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
 
             <View style={styles.lineView}></View>
 
-            <Text style={styles.sectionTitle}>
-              {Strings.listOfPrescribedMedicine}
-            </Text>
+            <Text style={styles.sectionTitle}>List of Prescribed Medicine</Text>
 
             <View style={styles.tableHeader}>
               <Text style={[styles.tableText, { flex: 2 }]}>
-                {Strings.medicationName}
+                Medication Name
               </Text>
-              <Text style={[styles.tableText, { flex: 1 }]}>
-                {Strings.totalItem}
-              </Text>
-              <Text style={[styles.tableText, { flex: 1 }]}>
-                {Strings.totalCost}
-              </Text>
+              <Text style={[styles.tableText, { flex: 1 }]}>Total Item</Text>
+              <Text style={[styles.tableText, { flex: 1 }]}>Total Cost</Text>
             </View>
 
             {medicines.length > 0 ? (
@@ -224,7 +216,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
                 <Text
                   style={[styles.rowText, { flex: 1, textAlign: 'center' }]}
                 >
-                  {Strings.noMedicinesFound}
+                  No Medicines Found
                 </Text>
               </View>
             )}
@@ -240,7 +232,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
               <Text
                 style={[styles.rowTextBold, { flex: 2, fontWeight: '700' }]}
               >
-                {Strings.total}
+                Total
               </Text>
               <Text style={{ flex: 1 }}></Text>
               <Text style={[styles.rowTextBold, { flex: 1 }]}>
@@ -251,7 +243,7 @@ const ViewBill: React.FC<any> = ({ navigation, route }) => {
             <View style={styles.lineView}></View>
 
             <Text style={[styles.label, { marginLeft: 15 }]}>
-              {Strings.availableAccountBalance}
+              Available Account Balance
             </Text>
             <Text style={[styles.value, { marginLeft: 15 }]}>
               Rs. {balance.toLocaleString()}

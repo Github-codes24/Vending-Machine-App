@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  Modal,
-  StyleSheet,
-  Pressable,
-  Image,
-  ImageSourcePropType,
-} from 'react-native';
+import { View, Text, Modal, StyleSheet, Pressable, Image } from 'react-native';
 import { Images, PRIMARY_COLOR, WHITE } from '../../constants';
 import Bill from '../bill';
 import Strings from '../../constants/LanguageStrings';

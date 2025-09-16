@@ -63,21 +63,21 @@ const ChooseLanguage: React.FC<any> = ({ navigation }) => {
         resizeMode="stretch"
       >
         <View style={styles.subContainer}>
-          <Text style={styles.title}>{Strings.chooseLanguage}</Text>
+          <Text style={styles.title}>Choose Language</Text>
 
           {/* Language Options */}
           <LargeButton
-            label={Strings.english}
+            label="English"
             selected={selected === 'English'}
             onPress={() => setSelected('English')}
           />
           <LargeButton
-            label={Strings.hindi}
+            label="Hindi"
             selected={selected === 'Hindi'}
             onPress={() => setSelected('Hindi')}
           />
           <LargeButton
-            label={Strings.marathi}
+            label="Marathi"
             selected={selected === 'Marathi'}
             onPress={() => setSelected('Marathi')}
           />
@@ -87,9 +87,10 @@ const ChooseLanguage: React.FC<any> = ({ navigation }) => {
         <View style={styles.buttonContainer}>
           <CancelButton
             style={isLandscape ? styles.landscapeButton : styles.portraitButton}
+            label="Cancel"
           />
           <CustomButton
-            label={Strings.continue}
+            label="Continue"
             color={PRIMARY_COLOR}
             onPress={handleContinue}
             style={isLandscape ? styles.landscapeButton : styles.portraitButton}

@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import React, { useEffect } from 'react';
 import { BACKGROUNDCOLOR, DARK_GREEN, Images } from '../../constants';
-import Strings from '../../constants/LanguageStrings';
 import useUserStore from '../../store/userStore';
 
 const Start: React.FC<any> = ({ navigation }) => {
@@ -20,6 +19,7 @@ const Start: React.FC<any> = ({ navigation }) => {
     }
   }, [user]);
 
+  // Simulate RFID scan for testing
   const testRFIDScan = () => {
     const testRFID = 'RFID123456';
     console.log('Test RFID:', testRFID, 'fetchUserProfile');
@@ -43,10 +43,11 @@ const Start: React.FC<any> = ({ navigation }) => {
       resizeMode="cover"
     >
       <View style={styles.container}>
-        <Text style={styles.title}>{Strings.welcome}</Text>
+        <Text style={styles.title}>Welcome</Text>
         <Image style={styles.imageStyle} source={Images.ic_welcomeScreen} />
-        <Text style={styles.title}>{Strings.pleaseScanYourRFIDCard}</Text>
+        <Text style={styles.title}>Please scan your RFID card</Text>
 
+        {/* Test button for development - remove in production */}
         <Text style={styles.testButton} onPress={testRFIDScan}>
           Test RFID Scan
         </Text>
